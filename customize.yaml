@@ -1,0 +1,37 @@
+light.bedroom:
+  friendly_name: 床头灯
+  homebridge_name: 床头灯
+  homebridge_visible: False
+
+binary_sensor.natgas_sensor_158d000116bc78:
+  friendly_name: 燃气传感器
+  homebridge_name: 燃气传感器
+  homebridge_visible: False
+
+
+binary_sensor.motion_sensor_158d0001ae8149:
+  friendly_name: 移动传感器
+  homebridge_name: 移动传感器
+  homebridge_visible: False
+
+
+sensor.humidity_158d0001f538b8:
+  friendly_name: 湿度传感器
+  homebridge_name: 湿度传感器
+  homebridge_visible: False
+
+sensor.temperature_158d0001f538b8:
+  friendly_name: 温度传感器
+  homebridge_name: 温度传感器
+  homebridge_visible: False
+
+
+sensor.pressure_158d0001f538b8:
+  friendly_name: 气压传感器
+  homebridge_name: 气压传感器
+  homebridge_visible: False
+
+light.gateway_light_7811dc64ea36:
+  friendly_name: 网关灯
+  homebridge_name: 网关灯
+  homebridge_visible: False

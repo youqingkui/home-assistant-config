@@ -1,0 +1,42 @@
+rooms_view:
+    name: ROOMS
+    view: yes
+    entities:
+      - group.LivingRoom
+      - group.CookRoom
+      - group.BedRoom1
+      - group.BedRoom2
+
+
+LivingRoom:
+  name: 客厅
+  view: no
+  icon: mdi:sofa
+  entities:
+    - light.gateway_light_7811dc64ea36
+    - binary_sensor.motion_sensor_158d0001ae8149
+
+CookRoom:
+  name: 厨房
+  view: no
+  icon: mdi:pot
+  entities:
+    - binary_sensor.natgas_sensor_158d000116bc78
+
+BedRoom1:
+  name: 主卧
+  view: no
+  icon: mdi:hotel
+  entities:
+    - sensor.humidity_158d0001f538b8
+    - sensor.temperature_158d0001f538b8
+    - sensor.pressure_158d0001f538b8
+
+BedRoom2:
+  name: 次卧
+  view: no
+  icon: mdi:hotel
+  entities:
+    - light.bedroom
+
+
