@@ -1,0 +1,169 @@
+homeassistant:
+  # Name of the location where Home Assistant is running
+  name: Home
+  # Location required to calculate the time the sun rises and sets
+  latitude: 22.5333
+  longitude: 114.1333
+  # Impacts weather/sunrise data (altitude above sea level in meters)
+  elevation: 0
+  # metric for Metric, imperial for Imperial
+  unit_system: metric
+  # Pick yours from here: http://en.wikipedia.org/wiki/List_of_tz_database_time_zones
+  time_zone: Asia/Shanghai
+  # Customization file
+  customize: !include customize.yaml
+
+# Show links to resources in log and frontend
+introduction:
+
+# Enables the frontend
+frontend:
+
+# Enables configuration UI
+config:
+
+http:
+#  api_password: youqingkui
+  base_url: 127.0.0.1:8123
+  # Secrets are defined in the file secrets.yaml
+  api_password: !secret http_password
+  # Uncomment this if you are using SSL/TLS, running in Docker container, etc.
+  # base_url: example.duckdns.org:8123
+
+# Checks for available updates
+# Note: This component will send some information about your system to
+# the developers to assist with development of Home Assistant.
+# For more information, please see:
+# https://home-assistant.io/blog/2016/10/25/explaining-the-updater/
+updater:
+  # Optional, allows Home Assistant developers to focus on popular components.
+  # include_used_components: true
+
+# Discover some devices automatically
+discovery:
+
+# Allows you to issue voice commands from the frontend in enabled browsers
+conversation:
+
+# Enables support for tracking state changes over time
+history:
+
+# View all events in a logbook
+logbook:
+
+# Enables a map showing the location of tracked devices
+map:
+
+# Track the sun
+sun:
+
+# Weather prediction
+sensor:
+  - platform: yr
+#  - platform: mqtt
+#    state_topic: 'office/sensor1'
+#    name: 'Temperature'
+#    unit_of_measurement: '°C'
+#    value_template: '{{ value_json.temperature }}'
+#  - platform: mqtt
+#    state_topic: 'office/sensor1'
+#    name: 'Humidity'
+#    unit_of_measurement: '%'
+#    value_template: '{{ value_json.humidity }}'
+
+notify:
+  - name: app_push
+    platform: instapush
+    api_key: !secret instapush_api_key
+    app_secret: !secret instapush_app_secret
+    event: msg
+    tracker: state
+
+  - name: sns_email
+    platform: aws_sns
+    aws_access_key_id: !secret aws_access_key_id
+    aws_secret_access_key: !secret aws_secret_access_key
+    region_name: 'ap-northeast-2'
+
+#calendar:
+#  - platform: todoist
+#    token: !secret todoist_token
+#    custom_projects:
+#      - name: 'Inbox'
+#      - name: 'Due Today'
+#        due_date_days: 0
+#      - name: 'Due This Week'
+#        due_date_days: 7
+
+mqtt:
+  broker: !secret aws_broker
+  port: 8883
+  client_id: test
+  certificate: /Users/youqingkui/Downloads/connect_device_package/root-CA.crt
+  client_key: /Users/youqingkui/Downloads/connect_device_package/Mac.private.key
+  client_cert: /Users/youqingkui/Downloads/connect_device_package/Mac.cert.pem
+  protocol: 3.1.1
+
+hello_mqtt:
+  topic: some_mqtt/topic/here
+
+#aws_rekognition:
+#  region_name: us-east-1
+
+#android_ip_webcam:
+#  - host: 192.168.31.190
+#    port: 8080
+#    sensors:
+#      - audio_connections
+#      - battery_level
+#      - battery_temp
+#      - battery_voltage
+#      - light
+#      - motion
+#      - pressure
+#    switches:
+#      - exposure_lock
+#      - ffc
+#      - focus
+#      - gps_active
+#      - night_vision
+#      - overlay
+#      - torch
+#      - whitebalance_lock
+#      - video_recording
+#
+#microsoft_face:
+#  api_key: !secret microsoft_face_api_key
+#
+#image_processing:
+##  - platform: microsoft_face_detect
+#  - platform: aws_face
+#    source:
+#      - entity_id: camera.ip_webcam
+
+ifttt:
+  key: !secret ifttt_key
+
+#device_tracker:
+#  - platform: xiaomi
+#    host: 192.168.31.1
+#    password: !secret mi_route
+#    consider_home: 120
+#
+#xiaomi_aqara:
+#  gateways:
+#    - mac: !secret xiaomi_aqara_key
+#      key: !secret xiaomi_aqara_mac
+
+# Text to speech
+tts:
+  - platform: google
+
+logger:
+  default: info
+  logs:
+    homeassistant.components.mqtt: debug  
+
+group: !include groups.yaml
+automation: !include automations.yaml
+script: !include scripts.yaml
