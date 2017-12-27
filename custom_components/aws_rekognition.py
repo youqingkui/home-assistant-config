@@ -14,6 +14,9 @@ import aiohttp
 from aiohttp.hdrs import CONTENT_TYPE
 import async_timeout
 import voluptuous as vol
+import homeassistant.helpers.config_validation as cv
+from homeassistant.loader import get_component
+
 
 import boto3
 
@@ -24,29 +27,99 @@ DOMAIN = 'aws_rekognition'
 DEPENDENCIES = ['camera']
 
 
-CONF_REGION_NAME = 'region_name'
-# DEFAULT_CONF_REGION_NAME = 'us-east-1'
-# CONF_ATTRIBUTES = 'attributes'
-
-client = boto3.client('rekognition', region_name='us-east-1')
+CONF_REGION = 'region_name'
+CONF_ACCESS_KEY_ID = 'aws_access_key_id'
+CONF_SECRET_ACCESS_KEY = 'aws_secret_access_key'
 
 
+
+SERVICE_CREATE_COLLECTION  = 'CreateCollection '
+SERVICE_LIST_COLLECTION  = 'ListCollections  '
+SERVICE_DELETE_COLLECTION  = 'DeleteCollection'
+SERVICE_DETECT_FACE = 'DetectFaces'
+
+
+CONFIG_SCHEMA = vol.Schema({
+    DOMAIN: vol.Schema({
+        vol.Optional(CONF_REGION, default="us-east-1"): cv.string,
+        vol.Required(CONF_ACCESS_KEY_ID): cv.string,
+        vol.Optional(CONF_SECRET_ACCESS_KEY): cv.string
+    }),
+}, extra=vol.ALLOW_EXTRA)
 
 def setup(hass, config):
     """Set up microsoft face."""
     entity_id = 'aws_rekognition.last_message'
+    _LOGGER.warning(config[DOMAIN])
+    face = AwsFace(hass, config[DOMAIN].get(CONF_ACCESS_KEY_ID), config[DOMAIN].get(CONF_SECRET_ACCESS_KEY),
+                   config[DOMAIN].get(CONF_REGION), entity_id)
 
-    def face_index(call):
+
+    hass.services.register(DOMAIN, 'detect_faces', face.detect_faces)
+    hass.services.register(DOMAIN, 'face_person', face.async_face_person)
+
+    return True
+
+
+
+class AwsFace(object):
+    def __init__(self, hass, aws_access_key_id, aws_secret_access_key, region_name, entities):
+        self.hass = hass
+        self.aws_access_key_id = aws_access_key_id
+        self.aws_secret_access_key = aws_secret_access_key
+        self.region_name = region_name
+        self._entities = entities
+        _LOGGER.warning(region_name)
+        self.client = boto3.client(service_name='rekognition', region_name=self.region_name,
+                                   aws_access_key_id=self.aws_access_key_id,
+                                   aws_secret_access_key=self.aws_secret_access_key)
+
+    def detect_faces(self, call):
         bucket = call.data.get('bucket')
         fileName = call.data.get('fileName')
-        response = client.detect_labels(Image={'S3Object': {'Bucket': bucket, 'Name': fileName}}, MinConfidence=75)
-        _LOGGER.warning("face_index => %s" % response)
-        hass.states.set(entity_id, 'hello aws')
+        try:
+            response = self.client.detect_labels(Image={'S3Object': {'Bucket': bucket, 'Name': fileName}}, MinConfidence=75)
+        except Exception as e:
+            _LOGGER.error(e)
+            return False
+        _LOGGER.warning("response => %s" % response)
+        Labels = response.get('Labels', [])
+        self.hass.states.set(self._entities, Labels)
+        return response
 
-    hass.states.set(entity_id, 'No messages')
+    @asyncio.coroutine
+    def async_face_person(self, call):
+        camera_entity = call.data['camera_entity']
+        camera = get_component('camera')
+        try:
+            image = yield from camera.async_get_image(self.hass, camera_entity)
+            response = self.client.detect_labels(
+                Image={
+                    'Bytes': image,
+                }
+            )
+            _LOGGER.warning(response)
+        except Exception as e:
+            _LOGGER.error(e)
 
-    hass.services.register(DOMAIN, 'set_state', face_index)
-    return True
+
+
+
+# def setup(hass, config):
+#     """Set up microsoft face."""
+#     entity_id = 'aws_rekognition.last_message'
+#
+#     def face_index(call):
+#         bucket = call.data.get('bucket')
+#         fileName = call.data.get('fileName')
+#         response = client.detect_labels(Image={'S3Object': {'Bucket': bucket, 'Name': fileName}}, MinConfidence=75)
+#         _LOGGER.warning("face_index => %s" % response)
+#         hass.states.set(entity_id, 'hello aws')
+#
+#     hass.states.set(entity_id, 'No messages')
+#
+#     hass.services.register(DOMAIN, 'set_state', face_index)
+#     return True
 
 
 # class AwsFace(object):
