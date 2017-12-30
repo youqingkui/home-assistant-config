@@ -1,37 +1,72 @@
-light.bedroom:
+light.yeelight_unknown_7811dc8f8965:
   friendly_name: 床头灯
   homebridge_name: 床头灯
-  homebridge_visible: False
+  homebridge_visible: True
 
 binary_sensor.natgas_sensor_158d000116bc78:
   friendly_name: 燃气传感器
   homebridge_name: 燃气传感器
-  homebridge_visible: False
+  homebridge_visible: True
 
 
 binary_sensor.motion_sensor_158d0001ae8149:
   friendly_name: 移动传感器
   homebridge_name: 移动传感器
-  homebridge_visible: False
+  homebridge_visible: True
 
 
 sensor.humidity_158d0001f538b8:
   friendly_name: 湿度传感器
   homebridge_name: 湿度传感器
-  homebridge_visible: False
+  icon: mdi:water-percent
+  homebridge_visible: True
 
 sensor.temperature_158d0001f538b8:
   friendly_name: 温度传感器
   homebridge_name: 温度传感器
-  homebridge_visible: False
+  homebridge_visible: True
+
+sensor.humidity_158d000202867e:
+  friendly_name: 湿度传感器2
+  icon: mdi:water-percent
+  homebridge_name: 湿度传感器2
+  homebridge_visible: True
+
+sensor.temperature_158d000202867e:
+  friendly_name: 温度传感器2
+  homebridge_name: 温度传感器2
+  homebridge_visible: True
 
 
 sensor.pressure_158d0001f538b8:
   friendly_name: 气压传感器
   homebridge_name: 气压传感器
-  homebridge_visible: False
+  homebridge_visible: True
 
 light.gateway_light_7811dc64ea36:
   friendly_name: 网关灯
   homebridge_name: 网关灯
-  homebridge_visible: False
+  homebridge_visible: True
+
+switch.original_xiaomi_mi_smart_wifi_socket_usb:
+  friendly_name: 智能插座USB
+  homebridge_name: 智能插座USB
+  homebridge_visible: True
+
+switch.original_xiaomi_mi_smart_wifi_socket:
+  friendly_name: 智能插座
+  homebridge_name: 智能插座
+  homebridge_visible: True
+
+camera.ip_webcam:
+  friendly_name: ip_webcam
+  homebridge_name: ip_webcam
+  homebridge_visible: True
+
+
+sensor.illumination_7811dc64ea36:
+  hidden: false
+  icon: mdi:alarm-light
+  friendly_name: 光线传感器
+  homebridge_name: 光线传感器
+  homebridge_visible: True

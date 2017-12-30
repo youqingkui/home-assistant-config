@@ -6,6 +6,15 @@ rooms_view:
       - group.CookRoom
       - group.BedRoom1
       - group.BedRoom2
+      - group.Balcony
+
+Balcony:
+  name: 阳台
+  view: no
+  icon: mdi:balcony
+  entities:
+    - sensor.humidity_158d000202867e
+    - sensor.temperature_158d000202867e
 
 
 LivingRoom:
@@ -15,6 +24,9 @@ LivingRoom:
   entities:
     - light.gateway_light_7811dc64ea36
     - binary_sensor.motion_sensor_158d0001ae8149
+    - sensor.temperature_158d000202867e
+    - sensor.illumination_7811dc64ea36
+
 
 CookRoom:
   name: 厨房
@@ -37,6 +49,6 @@ BedRoom2:
   view: no
   icon: mdi:hotel
   entities:
-    - light.bedroom
+    - light.yeelight_unknown_7811dc8f8965
 
 

@@ -95,6 +95,10 @@ notify:
 #      - name: 'Due This Week'
 #        due_date_days: 7
 
+calendar:
+  - platform: caldav
+    url: !secret cldav_url
+
 mqtt:
   broker: !secret aws_broker
   port: 8883
@@ -107,31 +111,39 @@ mqtt:
 hello_mqtt:
   topic: some_mqtt/topic/here
 
-#aws_rekognition:
-#  region_name: us-east-1
+aws_rekognition:
+  region_name: us-east-1
+  aws_access_key_id: !secret aws_access_key_id
+  aws_secret_access_key: !secret aws_secret_access_key
 
-#android_ip_webcam:
-#  - host: 192.168.31.190
-#    port: 8080
-#    sensors:
-#      - audio_connections
-#      - battery_level
-#      - battery_temp
-#      - battery_voltage
-#      - light
-#      - motion
-#      - pressure
-#    switches:
-#      - exposure_lock
-#      - ffc
-#      - focus
-#      - gps_active
-#      - night_vision
-#      - overlay
-#      - torch
-#      - whitebalance_lock
-#      - video_recording
-#
+android_ip_webcam:
+  - host: 192.168.31.190
+    port: 8080
+    sensors:
+      - audio_connections
+      - battery_level
+      - battery_temp
+      - battery_voltage
+      - light
+      - motion
+      - pressure
+    switches:
+      - exposure_lock
+      - ffc
+      - focus
+      - gps_active
+      - night_vision
+      - overlay
+      - torch
+      - whitebalance_lock
+      - video_recording
+
+switch:
+  - platform: xiaomi_miio
+    name: Original Xiaomi Mi Smart WiFi Socket
+    host: 192.168.31.234
+    token: 2cec3457ac11a08b1fbcb4a2a1acdc5a
+
 #microsoft_face:
 #  api_key: !secret microsoft_face_api_key
 #
@@ -144,16 +156,16 @@ hello_mqtt:
 ifttt:
   key: !secret ifttt_key
 
-#device_tracker:
-#  - platform: xiaomi
-#    host: 192.168.31.1
-#    password: !secret mi_route
-#    consider_home: 120
-#
-#xiaomi_aqara:
-#  gateways:
-#    - mac: !secret xiaomi_aqara_key
-#      key: !secret xiaomi_aqara_mac
+device_tracker:
+  - platform: xiaomi
+    host: 192.168.31.1
+    password: !secret mi_route
+    consider_home: 120
+
+xiaomi_aqara:
+  gateways:
+    - mac: !secret xiaomi_aqara_mac
+      key: !secret xiaomi_aqara_key
 
 # Text to speech
 tts:
