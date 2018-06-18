@@ -12,6 +12,8 @@ homeassistant:
   time_zone: Asia/Shanghai
   # Customization file
   customize: !include customize.yaml
+  # whitelist_external_dirs: /home/pi/.homeassistant/dafang_motion_snapshot/snapshot/  
+
 
 # Show links to resources in log and frontend
 introduction:
@@ -19,16 +21,34 @@ introduction:
 # Enables the frontend
 frontend:
 
+
+
 # Enables configuration UI
+cloud:
+  alexa:
+    filter:
+      include_entities:
+        - light.xiaomi_philips_smart_led_ball
+        - light.gateway_light_7811dc64ea36
+      include_domains:
+        - switch
+    entity_config:
+      light.xiaomi_philips_smart_led_ball:
+        name: led ball
+        description: The light in the living room
+      light.gateway_light_7811dc64ea36:
+        name: gateway light
+        description: The gateway light in the living room
 config:
 
 http:
 #  api_password: youqingkui
-  base_url: 127.0.0.1:8123
+  base_url: 192.168.31.121:8123
   # Secrets are defined in the file secrets.yaml
   api_password: !secret http_password
   # Uncomment this if you are using SSL/TLS, running in Docker container, etc.
   # base_url: example.duckdns.org:8123
+  use_x_forwarded_for: True
 
 # Checks for available updates
 # Note: This component will send some information about your system to
@@ -60,6 +80,33 @@ sun:
 # Weather prediction
 sensor:
   - platform: yr
+#  - platform: darksky
+#    api_key: !secret darksky_key
+#    update_interval:
+#      days: 0
+#      hours: 0
+#      minutes: 0
+#      seconds: 30
+#      milliseconds: 0
+#    monitored_conditions:
+#      - summary
+#      - icon
+#      - nearest_storm_distance
+#      - precip_intensity
+#      - temperature
+#      - apparent_temperature
+#      - wind_speed
+#      - wind_bearing
+#      - cloud_cover
+#      - humidity
+#      - pressure
+#      - visibility
+#      - daily_summary
+#      - temperature_max
+#      - temperature_min
+#      - apparent_temperature_max
+#      - apparent_temperature_min
+#      - precip_intensity_max
 #  - platform: mqtt
 #    state_topic: 'office/sensor1'
 #    name: 'Temperature'
@@ -71,78 +118,18 @@ sensor:
 #    unit_of_measurement: '%'
 #    value_template: '{{ value_json.humidity }}'
 
-notify:
-  - name: app_push
-    platform: instapush
-    api_key: !secret instapush_api_key
-    app_secret: !secret instapush_app_secret
-    event: msg
-    tracker: state
 
-  - name: sns_email
-    platform: aws_sns
-    aws_access_key_id: !secret aws_access_key_id
-    aws_secret_access_key: !secret aws_secret_access_key
-    region_name: 'ap-northeast-2'
+# switch:
+#   - platform: xiaomi_miio
+#     name: Original Xiaomi Mi Smart WiFi Socket
+#     host: 192.168.31.234
+#     token: 2cec3457ac11a08b1fbcb4a2a1acdc5a
 
-#calendar:
-#  - platform: todoist
-#    token: !secret todoist_token
-#    custom_projects:
-#      - name: 'Inbox'
-#      - name: 'Due Today'
-#        due_date_days: 0
-#      - name: 'Due This Week'
-#        due_date_days: 7
-
-calendar:
-  - platform: caldav
-    url: !secret cldav_url
-
-mqtt:
-  broker: !secret aws_broker
-  port: 8883
-  client_id: test
-  certificate: /Users/youqingkui/Downloads/connect_device_package/root-CA.crt
-  client_key: /Users/youqingkui/Downloads/connect_device_package/Mac.private.key
-  client_cert: /Users/youqingkui/Downloads/connect_device_package/Mac.cert.pem
-  protocol: 3.1.1
-
-hello_mqtt:
-  topic: some_mqtt/topic/here
-
-aws_rekognition:
-  region_name: us-east-1
-  aws_access_key_id: !secret aws_access_key_id
-  aws_secret_access_key: !secret aws_secret_access_key
-
-android_ip_webcam:
-  - host: 192.168.31.190
-    port: 8080
-    sensors:
-      - audio_connections
-      - battery_level
-      - battery_temp
-      - battery_voltage
-      - light
-      - motion
-      - pressure
-    switches:
-      - exposure_lock
-      - ffc
-      - focus
-      - gps_active
-      - night_vision
-      - overlay
-      - torch
-      - whitebalance_lock
-      - video_recording
-
-switch:
-  - platform: xiaomi_miio
-    name: Original Xiaomi Mi Smart WiFi Socket
-    host: 192.168.31.234
-    token: 2cec3457ac11a08b1fbcb4a2a1acdc5a
+# light:
+#   - platform: xiaomi_miio
+#     name: Xiaomi Philips Smart LED Ball
+#     host: 192.168.31.19
+#     token: b89eeb61ce80e07a2ff2b40db9105e4c
 
 #microsoft_face:
 #  api_key: !secret microsoft_face_api_key
@@ -167,6 +154,44 @@ xiaomi_aqara:
     - mac: !secret xiaomi_aqara_mac
       key: !secret xiaomi_aqara_key
 
+climate:
+  - platform: xiaomi_miio
+    name: 空调伴侣
+    host: 192.168.31.55
+    token: !secret xiaomi_miio_climate
+    target_sensor: sensor.temperature_158d00020ef39b
+    scan_interval: 60
+
+python_script:
+
+switch:
+  - platform: command_line
+    switches:
+      kitchen_light:
+        command_on: "python /home/pi/.homeassistantustom_components/love_music.py START"
+        command_off: "python /home/pi/.homeassistantustom_components/love_music.py NEXT"
+
+  - platform: xiaomi_miio
+    name: Original Xiaomi Mi Smart WiFi Socket
+    host: 192.168.31.234
+    token: !secret xiaomi_wifi_socket
+
+
+camera:
+  - platform: ffmpeg
+    name: DaFang3
+    input: -rtsp_transport tcp -i rtsp://192.168.31.187:8554/unicast
+    extra_arguments: -pred 1 -q:v 2
+
+
+mqtt:
+  # broker: 127.0.0.1
+  discovery: true
+  discovery_prefix: homeassistant
+  protocol: 3.1.1
+ 
+
+
 # Text to speech
 tts:
   - platform: google
@@ -174,8 +199,86 @@ tts:
 logger:
   default: info
   logs:
-    homeassistant.components.mqtt: debug  
+    homeassistant.components.mqtt: info
 
 group: !include groups.yaml
 automation: !include automations.yaml
 script: !include scripts.yaml
+
+
+#notify:
+#  - name: app_push
+#    platform: instapush
+#    api_key: !secret instapush_api_key
+#    app_secret: !secret instapush_app_secret
+#    event: msg
+#    tracker: state
+#
+#  - name: sns_email
+#    platform: aws_sns
+#    aws_access_key_id: !secret aws_access_key_id
+#    aws_secret_access_key: !secret aws_secret_access_key
+#    region_name: 'ap-northeast-2'
+#
+#calendar:
+#  - platform: todoist
+#    token: !secret todoist_token
+#    custom_projects:
+#      - name: 'Inbox'
+#      - name: 'Due Today'
+#        due_date_days: 0
+#      - name: 'Due This Week'
+#        due_date_days: 7
+
+# calendar:
+#   - platform: caldav
+#     url: !secret cldav_url
+
+#mqtt:
+#  broker: !secret aws_broker
+#  port: 8883
+#  client_id: test
+#  certificate: /Users/youqingkui/Downloads/connect_device_package/root-CA.crt
+#  client_key: /Users/youqingkui/Downloads/connect_device_package/Mac.private.key
+#  client_cert: /Users/youqingkui/Downloads/connect_device_package/Mac.cert.pem
+#  protocol: 3.1.1
+#
+#hello_mqtt:
+#  topic: some_mqtt/topic/here
+# dafang_motion_snapshot:
+#   topic: myhome/dafang/motion/snapshot
+#aws_rekognition:
+#  region_name: us-east-1
+#  aws_access_key_id: !secret aws_access_key_id
+#  aws_secret_access_key: !secret aws_secret_access_key
+
+# android_ip_webcam:
+#   - host: 192.168.31.250
+#     port: 8080
+#     sensors:
+#       - audio_connections
+#       - battery_level
+#       - battery_temp
+#       - battery_voltage
+#       - light
+#       - motion
+#       - pressure
+#     switches:
+#       - exposure_lock
+#       - ffc
+#       - focus
+#       - gps_active
+#       - night_vision
+#       - overlay
+#       - torch
+#       - whitebalance_lock
+#       - video_recording
+
+# switch:
+#   - platform: command_line
+#     switches:
+#       Play_Music:
+#         # command_on: 1
+#         # command_off: 0
+#         command_on: "python /home/pi/.homeassistantustom_components/love_music.py START"
+#         command_off: "python /home/pi/.homeassistantustom_components/love_music.py NEXT"

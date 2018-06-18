@@ -39,6 +39,7 @@ sensor.temperature_158d000202867e:
 
 
 sensor.pressure_158d0001f538b8:
+  icon: mdi:airballoon
   friendly_name: 气压传感器
   homebridge_name: 气压传感器
   homebridge_visible: True
@@ -59,6 +60,7 @@ switch.original_xiaomi_mi_smart_wifi_socket:
   homebridge_visible: True
 
 camera.ip_webcam:
+  icon: mdi:webcam
   friendly_name: ip_webcam
   homebridge_name: ip_webcam
   homebridge_visible: True
@@ -70,3 +72,72 @@ sensor.illumination_7811dc64ea36:
   friendly_name: 光线传感器
   homebridge_name: 光线传感器
   homebridge_visible: True
+  homebridge_sensor_type: light
+
+binary_sensor.door_window_sensor_158d0001e5d33d:
+  friendly_name: 门窗传感器
+  homebridge_name: 门窗传感器
+  homebridge_visible: True
+
+light.xiaomi_philips_smart_led_ball:
+  friendly_name: 灯球
+  homebridge_name: 灯球
+  homebridge_visible: True
+  alexa_name: ball
+
+# 新设备
+sensor.humidity_158d00020ef39b:
+  friendly_name: 湿度传感
+  icon: mdi:water-percent
+  homebridge_name: 湿度传感
+  homebridge_visible: True  
+
+sensor.temperature_158d00020ef39b:
+  friendly_name: 温度传感器
+  homebridge_name: 温度传感器
+  homebridge_visible: True 
+
+sensor.illumination_7811dcb7a577:  
+  hidden: false
+  icon: mdi:alarm-light
+  friendly_name: 光线传感器
+  homebridge_name: 光线传感器
+  homebridge_visible: True
+  homebridge_sensor_type: light
+
+media_player.living_room_speaker:
+  friendly_name: Google Home
+  homebridge_name: Google Home
+
+light.gateway_light_7811dcb7a577:
+  friendly_name: 网关灯
+  homebridge_name: 网关灯
+  homebridge_visible: True
+
+binary_sensor.switch_158d0002108f19:
+  friendly_name: 无线开关
+  homebridge_name: 无线开关
+  homebridge_visible: True
+
+climate.aqara_air_conditioning_companion:
+  friendly_name: 空调伴侣
+  homebridge_name: 空调伴侣
+  homebridge_visible: True
+
+binary_sensor.motion_sensor_158d0001f3d0bb:
+  friendly_name: 移动传感
+  homebridge_name: 移动传感
+  homebridge_visible: True
+
+binary_sensor.door_window_sensor_158d0002025c4b:
+  friendly_name: 门窗传感
+  homebridge_name: 门窗传感
+  homebridge_visible: True
+
+group.all_automations:
+  hidden: false
+group.all_scripts:
+  hidden: false  
+
+
+

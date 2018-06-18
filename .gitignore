@@ -108,3 +108,5 @@ deps/
 .HA_VERSION
 known_devices.yaml
 .uuid
+.cloud/
+tts/

@@ -1,0 +1,131 @@
+# msg_who_is_home:
+#   sequence:
+#     - service: ifttt.trigger
+#       data_template:
+#         event: >
+#           {% if is_state('device_tracker.youqingkuimbp', 'home') %}
+#             Move
+#           {% else %}
+#             OK
+#           {% endif %}
+        # message: >
+        #   {% if is_state('device_tracker.paulus', 'home') %}
+        #     Ha, Paulus is home!
+        #   {% else %}
+        #     Paulus is at {{ states('device_tracker.paulus') }}.
+        #   {% endif %}
+
+who_in_home:
+  sequence:
+    - service: ifttt.trigger
+      data_template:
+        event: Notify
+        value1: >
+          在线设备:
+          {% for state in states.device_tracker -%}
+            {% if is_state(state.entity_id, 'home') -%}
+              {{ state.attributes.friendly_name }}, 
+            {%- endif %}
+          {%- endfor %}
+
+
+now_temperature:
+  sequence:
+    - service: ifttt.trigger
+      data_template:
+        event: Notify
+        value1: "现在温度 {{ states.sensor.temperature_158d00020ef39b.state }}°C"
+
+play_ringtone:
+  sequence:
+    - service: xiaomi_aqara.play_ringtone
+      data:
+        gw_mac: 78:11:DC:B7:A5:77
+        ringtone_id: 11
+        ringtone_vol: 25
+
+dafang_snapshot:
+    sequence:
+      - service: camera.snapshot
+        data_template:
+          entity_id: "camera.dafang3"
+          filename: >
+            {% set image_name = 'hello' %}
+            /home/pi/.homeassistant/dafang_motion_snapshot/snapshot/{{image_name}}.jpg      
+      - service: ifttt.trigger
+        data_template: 
+          event: rich_notify
+          value2: "https://alexa.youqingkui.me/snapshot/{{image_name}}.jpg"
+
+send_record_video:
+  sequence:
+    - service: mqtt.publish
+      data:
+        topic: myhome/dafang/send_record_video
+        payload: "ON"
+
+send_record_image:
+  sequence:
+    - service: mqtt.publish
+      data:
+        topic: myhome/dafang/send_record_image
+        payload: "ON"
+
+dafang_left_motor:
+  sequence:
+    - service: mqtt.publish
+      data:
+        topic: myhome/dafang/motors/horizontal/set
+        payload: "left"
+
+dafang_right_motor:
+  sequence:
+    - service: mqtt.publish
+      data:
+        topic: myhome/dafang/motors/horizontal/set
+        payload: "right"
+
+dafang_rtsp_restart:
+  alias: rtsp restart
+  sequence:
+    - alias: stop_rtsp
+      service: mqtt.publish
+      data:
+        topic: myhome/dafang/rtsp_h264_server/set
+        payload: "OFF"
+    - delay:
+        seconds: 5
+    - alias: start_rtsp
+      service: mqtt.publish
+      data:
+        topic: myhome/dafang/rtsp_h264_server/set
+        payload: "ON"
+
+#flash_loop:
+#  alias: Flash loop
+#  sequence:
+#    - delay:
+#        # time for flash light off
+#        seconds: 1
+#    - alias: stop_rtsp
+#      service: mqtt.publish
+#      data:
+#        topic: myhome/dafang/rtsp_h264_server/set
+#        payload: "ON"
+
+#dafang_right_motor:
+#  sequence:
+#    - service_template: >
+#      {% for i in [1,2,3,4,5] -%}
+#        mqtt.publish
+#      {%- endfor %}
+#    data_template:
+#      topic: myhome/dafang/motors/horizontal/set
+#      payload: "right"
+
+
+#PLAY LOVE MUSIC:
+#  sequence:
+#    - platform: command_line
+#      name: Tide
+#      command: python /home/pi/.homeassistant/custom_components/love_music.py START

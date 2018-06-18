@@ -1,32 +1,70 @@
 rooms_view:
-    name: ROOMS
+  name: ROOMS
+  view: yes
+  entities:
+    - group.LivingRoom
+    - group.CookRoom
+    - group.BedRoom1
+    - group.BedRoom2
+    - group.Balcony
+    - group.Dafang3
+
+automation_view:
+    name: Automation
     view: yes
     entities:
-      - group.LivingRoom
-      - group.CookRoom
-      - group.BedRoom1
-      - group.BedRoom2
-      - group.Balcony
+      - group.all_automations
+      - group.all_scripts
 
-Balcony:
-  name: 阳台
-  view: no
-  icon: mdi:balcony
-  entities:
-    - sensor.humidity_158d000202867e
-    - sensor.temperature_158d000202867e
-
+camera_view:
+    name: Camera
+    view: yes
+    entities:
+      - group.Dafang3    
 
 LivingRoom:
   name: 客厅
   view: no
   icon: mdi:sofa
   entities:
-    - light.gateway_light_7811dc64ea36
-    - binary_sensor.motion_sensor_158d0001ae8149
-    - sensor.temperature_158d000202867e
-    - sensor.illumination_7811dc64ea36
+    - sensor.illumination_7811dcb7a577
+    - sensor.humidity_158d00020ef39b
+    - sensor.temperature_158d00020ef39b
+    - light.gateway_light_7811dcb7a577
+    - media_player.living_room_speaker
+    - binary_sensor.switch_158d0002108f19
+    - binary_sensor.motion_sensor_158d0001f3d0bb
+    - binary_sensor.door_window_sensor_158d0002025c4b
+    - switch.original_xiaomi_mi_smart_wifi_socket
+    - switch.original_xiaomi_mi_smart_wifi_socket_usb
 
+Dafang3:
+  entities:
+    - camera.dafang3
+    - switch.dafang_h264_rtsp_server
+    - switch.dafang_mjpeg_rtsp_server
+    - sensor.dafang
+    - device_tracker.dafang
+    - sensor.dafang_light_sensor
+    - switch.dafang_ir_filter
+    - switch.dafang_ir_led
+    - switch.dafang_night_mode
+    - switch.dafang_night_mode_auto
+    - switch.dafang_blue_led
+    - switch.dafang_yellow_led
+    - switch.dafang_motion_detection
+    - switch.dafang_motion_tracking
+    - camera.dafang_motion_snapshot
+    - binary_sensor.dafang_motion_sensor  
+    - cover.dafang_move_leftright
+    - cover.dafang_move_updown
+
+BedRoom1:
+  name: 主卧
+  view: no
+  icon: mdi:hotel
+  entities:
+    - climate.aqara_air_conditioning_companion  
 
 CookRoom:
   name: 厨房
@@ -35,20 +73,98 @@ CookRoom:
   entities:
     - binary_sensor.natgas_sensor_158d000116bc78
 
-BedRoom1:
-  name: 主卧
-  view: no
-  icon: mdi:hotel
-  entities:
-    - sensor.humidity_158d0001f538b8
-    - sensor.temperature_158d0001f538b8
-    - sensor.pressure_158d0001f538b8
 
-BedRoom2:
-  name: 次卧
-  view: no
-  icon: mdi:hotel
-  entities:
-    - light.yeelight_unknown_7811dc8f8965
+
+# rooms_view:
+#   name: ROOMS
+#   view: yes
+#   entities:
+#     - group.LivingRoom
+#     - group.CookRoom
+#     - group.BedRoom1
+#     - group.BedRoom2
+#     - group.Balcony
+
+# device_view:
+#   name: Device
+#   view: yes
+#   entities:
+#     - group.all_devices
+
+# darksky:
+#   name: darksky
+#   view: yes
+#   icon: mdi:hotel
+#   entities:
+#     - sensor.dark_sky_daily_summary
+#     - sensor.dark_sky_summary
+#     - sensor.dark_sky_apparent_temperature
+#     - sensor.dark_sky_cloud_coverage
+#     - sensor.dark_sky_daily_high_apparent_temperature
+#     - sensor.dark_sky_daily_high_temperature
+#     - sensor.dark_sky_daily_low_apparent_temperature
+#     - sensor.dark_sky_daily_low_temperature
+#     - sensor.dark_sky_daily_max_precip_intensity
+#     - sensor.dark_sky_daily_summary
+#     - sensor.dark_sky_humidity
+#     - sensor.dark_sky_icon
+#     - sensor.dark_sky_nearest_storm_distance
+#     - sensor.dark_sky_precip_intensity
+#     - sensor.dark_sky_pressure
+#     - sensor.dark_sky_summary
+#     - sensor.dark_sky_temperature
+#     - sensor.dark_sky_visibility
+#     - sensor.dark_sky_wind_bearing
+#     - sensor.dark_sky_wind_speed
+
+
+# Balcony:
+#   name: 阳台
+#   view: no
+#   icon: mdi:balcony
+#   entities:
+#     - sensor.humidity_158d000202867e
+#     - sensor.temperature_158d000202867e
+
+
+# LivingRoom:
+#   name: 客厅
+#   view: no
+#   icon: mdi:sofa
+#   entities:
+#     - light.gateway_light_7811dc64ea36
+#     - binary_sensor.motion_sensor_158d0001ae8149
+#     - sensor.temperature_158d000202867e
+#     - sensor.illumination_7811dc64ea36
+#     - binary_sensor.door_window_sensor_158d0001e5d33d
+#     - light.xiaomi_philips_smart_led_ball
+
+
+# CookRoom:
+#   name: 厨房
+#   view: no
+#   icon: mdi:pot
+#   entities:
+#     - binary_sensor.natgas_sensor_158d000116bc78
+
+# BedRoom1:
+#   name: 主卧
+#   view: no
+#   icon: mdi:hotel
+#   entities:
+#     - sensor.humidity_158d0001f538b8
+#     - sensor.temperature_158d0001f538b8
+#     - sensor.pressure_158d0001f538b8
+#     - switch.original_xiaomi_mi_smart_wifi_socket
+#     - switch.original_xiaomi_mi_smart_wifi_socket_usb
+
+# BedRoom2:
+#   name: 次卧
+#   view: no
+#   icon: mdi:hotel
+#   entities:
+#     - light.yeelight_unknown_7811dc8f8965
+
+
 
 

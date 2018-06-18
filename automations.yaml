@@ -1,3 +1,287 @@
+- alias: Turn on the gateway light
+  trigger:
+    platform: event
+    event_type: click
+    event_data:
+      entity_id: binary_sensor.switch_158d0002108f19
+      click_type: double
+  action:
+    service: light.toggle
+    entity_id: light.gateway_light_7811dcb7a577
+
+- alias: Temperature Alert
+  trigger:
+    platform: numeric_state
+    entity_id: sensor.temperature_158d00020ef39b
+    value_template: '{{ state.state|round }}'
+    above: 28.0
+    # below: '30'
+    # for:
+    #   minutes: 1
+  action:
+    service: ifttt.trigger
+    data_template:
+      event: Notify
+      value1: "温度提醒 {{ states.sensor.temperature_158d00020ef39b.state }}°C"
+
+- alias: Humidity Alert
+  trigger:
+    platform: numeric_state
+    entity_id: sensor.humidity_158d00020ef39b
+    above: '80'
+  action:
+    service: ifttt.trigger
+    data_template:
+      event: Notify
+      value1: "湿度提醒 {{ states.sensor.humidity_158d00020ef39b.state }}%"      
+
+- alias: Back Home
+  trigger:
+    platform: state
+    entity_id: device_tracker.youqingkui
+    from: 'not_home'
+    to: 'home'
+  condition:
+    condition: and
+    conditions:
+      - condition: time
+        after: '19:00:00'
+        before: '07:00:00'
+      - condition: numeric_state
+        entity_id: sensor.illumination_7811dcb7a577
+        below: 450
+  action:
+    - service: light.turn_on
+      entity_id: light.gateway_light_7811dcb7a577
+    - service: ifttt.trigger
+      data:
+        event: Notify
+        value1: "youqingkui go home"
+
+- alias: Door Open
+  trigger: 
+    platform: state
+    entity_id: binary_sensor.door_window_sensor_158d0002025c4b
+    from: 'off'
+    to: 'on'
+  action:
+    - service: ifttt.trigger
+      data:
+        event: Notify
+        value1: "外门打开"
+
+
+- alias: Door Open Ringtone
+  trigger: 
+    platform: state
+    entity_id: binary_sensor.door_window_sensor_158d0002025c4b
+    from: 'off'
+    to: 'on'
+  condition:
+    condition: time
+    after: '19:00:00'
+    before: '07:00:00'
+  action:
+    - service: script.play_ringtone
+
+
+- alias: Door Close
+  trigger: 
+    platform: state
+    entity_id: binary_sensor.door_window_sensor_158d0002025c4b
+    from: 'on'
+    to: 'off'
+  action:
+    - service: ifttt.trigger
+      data:
+        event: Notify
+        value1: "外门关闭"  
+
+
+- alias: Remind Door
+  trigger: 
+    platform: state
+    entity_id: binary_sensor.door_window_sensor_158d0002025c4b
+    from: 'off'
+    to: 'on'
+    for:
+      minutes: 1  
+  action:
+    - service: ifttt.trigger
+      data:
+        event: Notify
+        value1: "记得关门哦"
+
+
+- alias: Auto Close Gateway Light  
+  trigger:
+    platform: state
+    entity_id: light.gateway_light_7811dcb7a577
+    from: 'off'
+    to: 'on'
+    for:
+      minutes: 3 
+  action:
+    - service: light.turn_off
+      entity_id: light.gateway_light_7811dcb7a577   
+
+
+- alias: Open Night Light
+  trigger:
+    platform: state
+    entity_id: binary_sensor.motion_sensor_158d0001f3d0bb
+    from: 'off'
+    to: 'on'
+
+  condition:
+    condition: and
+    conditions:
+      - condition: time
+        after: '19:00:00'
+        before: '07:00:00'
+      - condition: numeric_state
+        entity_id: sensor.illumination_7811dcb7a577
+        below: 80
+
+  action:
+    - service: light.turn_on
+      entity_id: light.gateway_light_7811dcb7a577
+
+
+- alias: Notify Move
+  trigger:
+    platform: state
+    entity_id: binary_sensor.motion_sensor_158d0001f3d0bb
+    from: 'off'
+    to: 'on'
+  condition:
+    condition: state
+    entity_id: device_tracker.youqingkui
+    state: "not_home"
+  action:
+    - service: ifttt.trigger
+      data:
+        event: Notify
+        value1: "检测到移动"
+
+- alias: Multiple Move        
+  trigger:
+    platform: state
+    entity_id: binary_sensor.motion_sensor_158d0001f3d0bb
+    to: 'on'
+  action:
+    - service: ifttt.trigger
+      data:
+        event: Notify
+        value1: "持续移动"
+
+
+- alias: motion detector
+  trigger:
+      platform: mqtt
+      topic: myhome/dafang/motion
+      payload: 'ON'
+  action:
+    - service: ifttt.trigger
+      data:
+        event: Notify
+        value1: "dafang 移动"
+    - condition: state
+      entity_id: device_tracker.youqingkui
+      state: "not_home"
+    - service: script.send_record_image
+
+
+- alias: Device online notify
+  trigger:
+    platform: event
+    event_type: 'state_changed'
+  condition:
+    condition: template
+    value_template: "{% if 'device_tracker' in trigger.event.data.entity_id %} true {% else %} false {% endif %}"
+  action:
+    - service: ifttt.trigger
+      data_template:
+        event: Notify
+        value1: "{{ state_attr(trigger.event.data.entity_id, 'friendly_name') }} now status {{ states(trigger.event.data.entity_id) }}"
+
+- alias: Auto Restart RTSP
+  trigger:
+    platform: time
+    minutes: '/10'
+    seconds: 00
+  action:
+    - service: script.dafang_rtsp_restart
+    - service: ifttt.trigger
+      data_template:
+        event: Notify
+        value1: "自动重启RTSP"
+
+#- alias: Dafang motor
+#  trigger:
+#    platform: state
+#    entity_id: device_tracker.youqingkui
+#    to: 'not_home'
+
+
+# - alias: Close Gateway Light
+#   trigger:
+#     platform: state
+#     entity_id: binary_sensor.motion_sensor_158d0001f3d0bb
+#     from: 'on'
+#     to: 'off'
+#     for:
+#       minutes: 5
+#   action:
+#     - service: light.turn_off
+#       entity_id: light.gateway_light_7811dcb7a577
+
+#- action:
+#  - data:
+#      event: Notify
+#      value1: "dangfang 检测到移动"
+#    service: ifttt.trigger
+#  alias: motion detector
+#  condition: []
+#  id: '9522507257594'
+#  trigger:
+#  - payload: 'ON'
+#    platform: mqtt
+#    topic: myhome/dafang/motion
+
+
+# - alias: Device online notify
+#   trigger:
+#     platform: state
+#     from: 'not_home'
+#     to: 'home'
+#   action:
+#     - service: ifttt.trigger
+#       data_template:
+#         event: Notify
+#         value1: "{{ states.entity_id }} go home"
+
+# - alias: Device online notify
+#   trigger:
+#     platform: event
+#     event_type: 'state_changed'
+#   action:
+#     - service: ifttt.trigger
+#       data_template:
+#         event: Notify3
+#         value1: "{{ trigger.event.data }} state_changed"
+
+#- alias: Play Music
+#  trigger:
+#    platform: event
+#    event_type: click
+#    event_data:
+#      entity_id: binary_sensor.switch_158d0002108f19
+#      click_type: double
+#  action:
+#    - platform: command_line
+#      command: python /home/pi/.homeassistantustom_components/love_music.py START
+
 # - alias: "Startup Notification"
 #   trigger:
 #     - platform: event
@@ -24,13 +308,13 @@
 #   trigger:
 #     platform: template
 #     entity_id: device_tracker.huawei_p10
-#     value_template: "{% if is('device_tracker.huawei_p10', 'home') %}true{% endif %}"  
+#     value_template: "{% if is('device_tracker.huawei_p10', 'home') %}true{% endif %}"
 
 #   action:
 #     - service: notify.app_push
 #       data:
 #         title: device_tracker
-#         message: "home"    
+#         message: "home"
 
 
 #- alias: "Startup Notification"
@@ -97,13 +381,12 @@
 #     platform: state
 #     entity_id: binary_sensor.motion_sensor_158d0001ae8149
 #     from: 'off'
-#     to: 'on' 
+#     to: 'on'
 
 #   action:
 #     - service: light.turn_on
 #       entity_id: light.gateway_light_7811dc64ea36
 #       data:
-#         brightness: 5              
-         
+#         brightness: 5
 
 
