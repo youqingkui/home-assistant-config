@@ -101,6 +101,82 @@ dafang_rtsp_restart:
         topic: myhome/dafang/rtsp_h264_server/set
         payload: "ON"
 
+dafang_move_left:
+  alias: dafang face
+  sequence:
+    - alias: left move
+      service: script.dafang_left_motor
+    - delay:
+        seconds: 1
+    - alias: left move
+      service: script.dafang_left_motor
+    - delay:
+        milliseconds: 500
+    - alias: left move
+      service: script.dafang_left_motor
+    - delay:
+        milliseconds: 500
+    - alias: left move
+      service: script.dafang_left_motor
+    - delay:
+        milliseconds: 500
+    - alias: left move
+      service: script.dafang_left_motor
+    - delay:
+        milliseconds: 500
+    - alias: left move
+      service: script.dafang_left_motor
+    - delay:
+        milliseconds: 500
+    - alias: left move
+      service: script.dafang_left_motor
+    - delay:
+        milliseconds: 500
+    - alias: left move
+      service: script.dafang_left_motor
+    - delay:
+        milliseconds: 500
+    - alias: left move
+      service: script.dafang_left_motor
+    - delay:
+        milliseconds: 500
+    - alias: left move
+      service: script.dafang_left_motor
+    - delay:
+        milliseconds: 500
+    - alias: left move
+      service: script.dafang_left_motor
+    - delay:
+        milliseconds: 500
+    - alias: left move
+      service: script.dafang_left_motor
+    - delay:
+        milliseconds: 500
+    - alias: left move
+      service: script.dafang_left_motor
+    - delay:
+        milliseconds: 500
+
+dafang_move_back:
+  sequence:
+    - service: script.dafang_right_motor
+    - service: script.dafang_right_motor
+    - service: script.dafang_right_motor
+    - service: script.dafang_right_motor
+    - service: script.dafang_right_motor
+    - service: script.dafang_right_motor
+    - service: script.dafang_right_motor
+    - service: script.dafang_right_motor
+    - service: script.dafang_right_motor
+    - service: script.dafang_right_motor
+
+reboot_dafang:
+  sequence:
+    - service: mqtt.publish
+      data:
+        topic: myhome/dafang/system/reboot
+        payload: "ON"
+
 #flash_loop:
 #  alias: Flash loop
 #  sequence:

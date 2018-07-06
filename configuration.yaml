@@ -80,6 +80,12 @@ sun:
 # Weather prediction
 sensor:
   - platform: yr
+  - platform: command_line
+    name: CPU Temperature
+    command: "cat /sys/class/thermal/thermal_zone0/temp"
+    # If errors occur, remove degree symbol below
+    unit_of_measurement: "°C"
+    value_template: '{{ value | multiply(0.001) | round(1) }}'
 #  - platform: darksky
 #    api_key: !secret darksky_key
 #    update_interval:
@@ -180,6 +186,10 @@ switch:
 camera:
   - platform: ffmpeg
     name: DaFang3
+    input: -rtsp_transport tcp -i rtsp://192.168.31.187:8554/unicast
+    extra_arguments: -pred 1 -q:v 2
+  - platform: ffmpeg
+    name: XiaoFang
     input: -rtsp_transport tcp -i rtsp://192.168.31.187:8554/unicast
     extra_arguments: -pred 1 -q:v 2
 

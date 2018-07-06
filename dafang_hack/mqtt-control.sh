@@ -182,6 +182,9 @@ killall mosquitto_sub.bin 2> /dev/null
     "${TOPIC}/send_record_image ON")
       /system/sdcard/controlscripts/send_record_image.sh >/dev/null
     ;;
+    "${TOPIC}/system/reboot ON")
+      /sbin/reboot
+    ;;
     "${TOPIC}/set "*)
       COMMAND=$(echo "$line" | awk '{print $2}')
       #echo "$COMMAND"

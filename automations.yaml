@@ -186,10 +186,16 @@
       data:
         event: Notify
         value1: "dafang 移动"
-    - condition: state
-      entity_id: device_tracker.youqingkui
-      state: "not_home"
+    - condition: or
+      conditions:
+        - condition: time
+          after: '00:00:00'
+          before: '07:00:00'
+        - condition: state
+          entity_id: device_tracker.youqingkui
+          state: "not_home"
     - service: script.send_record_image
+    - service: script.send_record_video
 
 
 - alias: Device online notify
@@ -208,14 +214,55 @@
 - alias: Auto Restart RTSP
   trigger:
     platform: time
-    minutes: '/10'
+    minutes: '/60'
     seconds: 00
   action:
     - service: script.dafang_rtsp_restart
+#    - service: ifttt.trigger
+#      data_template:
+#        event: Notify
+#        value1: "自动重启RTSP"
+
+
+- alias: Auto dafang night on
+  trigger:
+    platform: numeric_state
+    entity_id: sensor.illumination_7811dcb7a577
+    below: 95
+  action:
+    - service: mqtt.publish
+      data:
+        topic: myhome/dafang/night_mode/set
+        payload: "ON"
+    - service: ifttt.trigger
+      data:
+        event: Notify
+        value1: "dafang night on"
+
+- alias: Auto dafang night off
+  trigger:
+    platform: numeric_state
+    entity_id: sensor.illumination_7811dcb7a577
+    above: 200
+  action:
+    - service: mqtt.publish
+      data:
+        topic: myhome/dafang/night_mode/set
+        payload: "OFF"
+    - service: ifttt.trigger
+      data:
+        event: Notify
+        value1: "dafang night off"
+
+- alias: minio notify
+  trigger:
+      platform: mqtt
+      topic: minio
+  action:
     - service: ifttt.trigger
       data_template:
         event: Notify
-        value1: "自动重启RTSP"
+        value1: "Event {{ trigger.payload_json.EventType }}, Files {{ trigger.payload_json.Key }}"       
 
 #- alias: Dafang motor
 #  trigger:

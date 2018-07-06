@@ -66,10 +66,10 @@ def upload_file():
             mkdir(save_dir)
             file_path = os.path.join(save_dir, filename)
             file.save(file_path)
+            ifttt_notify(today_date, filename)
 
             s3_name = '%s/%s' % (today_date, filename)
             s3.upload_file(file_path, 'dafang', s3_name)
-            ifttt_notify(today_date, filename)
             return "ok"
 
 if __name__ == '__main__':
