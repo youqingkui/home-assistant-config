@@ -8,7 +8,7 @@ from werkzeug.utils import secure_filename
 
 import boto3
 
-UPLOAD_FOLDER = '/home/pi/.homeassistant/dafang_motion_snapshot/snapshot'
+UPLOAD_FOLDER = '/data/minio/dafang'
 ALLOWED_EXTENSIONS = set(['txt', 'pdf', 'png', 'jpg', 'jpeg', 'gif', 'mov', 'mp4'])
 
 app = Flask(__name__)
@@ -37,7 +37,7 @@ def ifttt_notify(date, file_name):
     }
     payload = {"value1":"dafang notify"}
 
-    file_url = "https://alexa.youqingkui.me/snapshot/%s/%s" % (date, file_name)
+    file_url = "https://minio.youqingkui.me/dafang/%s/%s" % (date, file_name)
     if 'jpg' in file_name:
         payload["value1"] = "dafang notify with image"
         payload['value3'] = file_url

@@ -102,3 +102,19 @@ switch.original_xiaomi_mi_smart_wifi_socket:
   name:
   platform: xiaomi_miio
   unique_id: chuangmi.plug.v1-F0:B4:29:03:F1:0D
+climate.:
+  name:
+  platform: xiaomi_miio
+  unique_id: lumi.acpartner.v3-78:11:DC:B2:A0:3E
+binary_sensor.switch_158d0002108f19_2:
+  name:
+  platform: xiaomi_aqara
+  unique_id: channel_0158d0002108f19
+binary_sensor.motion_sensor_158d0001f3d0bb_2:
+  name:
+  platform: xiaomi_aqara
+  unique_id: motion_status158d0001f3d0bb
+light.xiaomi_philips_smart_led_ball:
+  name:
+  platform: xiaomi_miio
+  unique_id: philips.light.bulb-78:11:DC:03:E4:AC

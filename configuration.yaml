@@ -86,6 +86,11 @@ sensor:
     # If errors occur, remove degree symbol below
     unit_of_measurement: "°C"
     value_template: '{{ value | multiply(0.001) | round(1) }}'
+  - platform: command_line
+    name: CPU_1mine
+    command: "uptime | awk '{print $8}' | sed 's/,//g'"
+    unit_of_measurement: "%"
+    value_template: '{{ value | multiply(100) | round(2) }}'
 #  - platform: darksky
 #    api_key: !secret darksky_key
 #    update_interval:
@@ -125,17 +130,7 @@ sensor:
 #    value_template: '{{ value_json.humidity }}'
 
 
-# switch:
-#   - platform: xiaomi_miio
-#     name: Original Xiaomi Mi Smart WiFi Socket
-#     host: 192.168.31.234
-#     token: 2cec3457ac11a08b1fbcb4a2a1acdc5a
 
-# light:
-#   - platform: xiaomi_miio
-#     name: Xiaomi Philips Smart LED Ball
-#     host: 192.168.31.19
-#     token: b89eeb61ce80e07a2ff2b40db9105e4c
 
 #microsoft_face:
 #  api_key: !secret microsoft_face_api_key
@@ -160,13 +155,14 @@ xiaomi_aqara:
     - mac: !secret xiaomi_aqara_mac
       key: !secret xiaomi_aqara_key
 
-climate:
-  - platform: xiaomi_miio
-    name: 空调伴侣
-    host: 192.168.31.55
-    token: !secret xiaomi_miio_climate
-    target_sensor: sensor.temperature_158d00020ef39b
-    scan_interval: 60
+#climate:
+#  - platform: xiaomi_miio
+#    name: 空调伴侣
+##    host: 192.168.31.55
+#    host: lumi-acpartner-v3_miio78476440
+#    token: !secret xiaomi_miio_climate
+#    target_sensor: sensor.temperature_158d00020ef39b
+#    scan_interval: 60
 
 python_script:
 
@@ -180,6 +176,7 @@ switch:
   - platform: xiaomi_miio
     name: Original Xiaomi Mi Smart WiFi Socket
     host: 192.168.31.234
+#    host: chuangmi-plug-v1_miio11440510
     token: !secret xiaomi_wifi_socket
 
 
@@ -188,10 +185,10 @@ camera:
     name: DaFang3
     input: -rtsp_transport tcp -i rtsp://192.168.31.187:8554/unicast
     extra_arguments: -pred 1 -q:v 2
-  - platform: ffmpeg
-    name: XiaoFang
-    input: -rtsp_transport tcp -i rtsp://192.168.31.187:8554/unicast
-    extra_arguments: -pred 1 -q:v 2
+#  - platform: ffmpeg
+#    name: XiaoFang
+#    input: -rtsp_transport tcp -i rtsp://192.168.31.187:8554/unicast
+#    extra_arguments: -pred 1 -q:v 2
 
 
 mqtt:
@@ -199,7 +196,15 @@ mqtt:
   discovery: true
   discovery_prefix: homeassistant
   protocol: 3.1.1
- 
+
+shell_command:
+  record_video: "bash /home/pi/.homeassistant/dafang_hack/record_video.sh"
+
+light:
+  - platform: xiaomi_miio
+    name: Xiaomi Philips Smart LED Ball
+    host: 192.168.31.15
+    token: !secret philips_light2_token
 
 
 # Text to speech
@@ -214,6 +219,18 @@ logger:
 group: !include groups.yaml
 automation: !include automations.yaml
 script: !include scripts.yaml
+
+# switch:
+#   - platform: xiaomi_miio
+#     name: Original Xiaomi Mi Smart WiFi Socket
+#     host: 192.168.31.234
+#     token:
+
+# light:
+#   - platform: xiaomi_miio
+#     name: Xiaomi Philips Smart LED Ball
+#     host: 192.168.31.19
+#     token:
 
 
 #notify:

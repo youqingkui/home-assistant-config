@@ -1,14 +1,3 @@
-- alias: Turn on the gateway light
-  trigger:
-    platform: event
-    event_type: click
-    event_data:
-      entity_id: binary_sensor.switch_158d0002108f19
-      click_type: double
-  action:
-    service: light.toggle
-    entity_id: light.gateway_light_7811dcb7a577
-
 - alias: Temperature Alert
   trigger:
     platform: numeric_state
@@ -35,29 +24,6 @@
       event: Notify
       value1: "湿度提醒 {{ states.sensor.humidity_158d00020ef39b.state }}%"      
 
-- alias: Back Home
-  trigger:
-    platform: state
-    entity_id: device_tracker.youqingkui
-    from: 'not_home'
-    to: 'home'
-  condition:
-    condition: and
-    conditions:
-      - condition: time
-        after: '19:00:00'
-        before: '07:00:00'
-      - condition: numeric_state
-        entity_id: sensor.illumination_7811dcb7a577
-        below: 450
-  action:
-    - service: light.turn_on
-      entity_id: light.gateway_light_7811dcb7a577
-    - service: ifttt.trigger
-      data:
-        event: Notify
-        value1: "youqingkui go home"
-
 - alias: Door Open
   trigger: 
     platform: state
@@ -69,21 +35,6 @@
       data:
         event: Notify
         value1: "外门打开"
-
-
-- alias: Door Open Ringtone
-  trigger: 
-    platform: state
-    entity_id: binary_sensor.door_window_sensor_158d0002025c4b
-    from: 'off'
-    to: 'on'
-  condition:
-    condition: time
-    after: '19:00:00'
-    before: '07:00:00'
-  action:
-    - service: script.play_ringtone
-
 
 - alias: Door Close
   trigger: 
@@ -112,42 +63,6 @@
         event: Notify
         value1: "记得关门哦"
 
-
-- alias: Auto Close Gateway Light  
-  trigger:
-    platform: state
-    entity_id: light.gateway_light_7811dcb7a577
-    from: 'off'
-    to: 'on'
-    for:
-      minutes: 3 
-  action:
-    - service: light.turn_off
-      entity_id: light.gateway_light_7811dcb7a577   
-
-
-- alias: Open Night Light
-  trigger:
-    platform: state
-    entity_id: binary_sensor.motion_sensor_158d0001f3d0bb
-    from: 'off'
-    to: 'on'
-
-  condition:
-    condition: and
-    conditions:
-      - condition: time
-        after: '19:00:00'
-        before: '07:00:00'
-      - condition: numeric_state
-        entity_id: sensor.illumination_7811dcb7a577
-        below: 80
-
-  action:
-    - service: light.turn_on
-      entity_id: light.gateway_light_7811dcb7a577
-
-
 - alias: Notify Move
   trigger:
     platform: state
@@ -163,18 +78,6 @@
       data:
         event: Notify
         value1: "检测到移动"
-
-- alias: Multiple Move        
-  trigger:
-    platform: state
-    entity_id: binary_sensor.motion_sensor_158d0001f3d0bb
-    to: 'on'
-  action:
-    - service: ifttt.trigger
-      data:
-        event: Notify
-        value1: "持续移动"
-
 
 - alias: motion detector
   trigger:
@@ -194,9 +97,8 @@
         - condition: state
           entity_id: device_tracker.youqingkui
           state: "not_home"
-    - service: script.send_record_image
-    - service: script.send_record_video
-
+#    - service: script.send_record_image
+    - service: script.record_video
 
 - alias: Device online notify
   trigger:
@@ -211,58 +113,156 @@
         event: Notify
         value1: "{{ state_attr(trigger.event.data.entity_id, 'friendly_name') }} now status {{ states(trigger.event.data.entity_id) }}"
 
-- alias: Auto Restart RTSP
+- alias: minio notify
   trigger:
-    platform: time
-    minutes: '/60'
-    seconds: 00
+      platform: mqtt
+      topic: minio
+  condition:
+    condition: template
+    value_template: "{% if 'ObjectCreated' in trigger.payload_json.EventType %} true {% else %} false {% endif %}"
   action:
-    - service: script.dafang_rtsp_restart
+    - service: ifttt.trigger
+      data_template:
+        event: rich_notify
+        value1: "{% if 'jpg' in  trigger.payload_json.Key %} dafang with image {% else %} dafang with video {% endif%}"
+        value2: "https://minio.youqingkui.me/{{trigger.payload_json.Key}}"
+        value3: "https://minio.youqingkui.me/{{trigger.payload_json.Key}}"
+
+#### 下面暂时用不到注释可以后面参考
+
+#- alias: Turn on the gateway light
+#  trigger:
+#    platform: event
+#    event_type: click
+#    event_data:
+#      entity_id: binary_sensor.switch_158d0002108f19
+#      click_type: double
+#  action:
+#    service: light.toggle
+#    entity_id: light.gateway_light_7811dcb7a577
+#
+#- alias: Back Home
+#  trigger:
+#    platform: state
+#    entity_id: device_tracker.youqingkui
+#    from: 'not_home'
+#    to: 'home'
+#  condition:
+#    condition: and
+#    conditions:
+#      - condition: time
+#        after: '19:00:00'
+#        before: '07:00:00'
+#      - condition: numeric_state
+#        entity_id: sensor.illumination_7811dcb7a577
+#        below: 450
+#  action:
+#    - service: light.turn_on
+#      entity_id: light.gateway_light_7811dcb7a577
+#    - service: ifttt.trigger
+#      data:
+#        event: Notify
+#        value1: "youqingkui go home"
+#
+#- alias: Door Open Ringtone
+#  trigger:
+#    platform: state
+#    entity_id: binary_sensor.door_window_sensor_158d0002025c4b
+#    from: 'off'
+#    to: 'on'
+#  condition:
+#    condition: time
+#    after: '19:00:00'
+#    before: '07:00:00'
+#  action:
+#    - service: script.play_ringtone
+#
+#- alias: Auto Close Gateway Light
+#  trigger:
+#    platform: state
+#    entity_id: light.gateway_light_7811dcb7a577
+#    from: 'off'
+#    to: 'on'
+#    for:
+#      minutes: 3
+#  action:
+#    - service: light.turn_off
+#      entity_id: light.gateway_light_7811dcb7a577
+#
+#- alias: Open Night Light
+#  trigger:
+#    platform: state
+#    entity_id: binary_sensor.motion_sensor_158d0001f3d0bb
+#    from: 'off'
+#    to: 'on'
+#
+#  condition:
+#    condition: and
+#    conditions:
+#      - condition: time
+#        after: '19:00:00'
+#        before: '07:00:00'
+#      - condition: numeric_state
+#        entity_id: sensor.illumination_7811dcb7a577
+#        below: 80
+#
+#  action:
+#    - service: light.turn_on
+#      entity_id: light.gateway_light_7811dcb7a577
+#
+#- alias: Multiple Move
+#  trigger:
+#    platform: state
+#    entity_id: binary_sensor.motion_sensor_158d0001f3d0bb
+#    to: 'on'
+#  action:
+#    - service: ifttt.trigger
+#      data:
+#        event: Notify
+#        value1: "持续移动"
+#
+#- alias: Auto Restart RTSP
+#  trigger:
+#    platform: time
+#    minutes: '/60'
+#    seconds: 00
+#  action:
+#    - service: script.dafang_rtsp_restart
 #    - service: ifttt.trigger
 #      data_template:
 #        event: Notify
 #        value1: "自动重启RTSP"
 
-
-- alias: Auto dafang night on
-  trigger:
-    platform: numeric_state
-    entity_id: sensor.illumination_7811dcb7a577
-    below: 95
-  action:
-    - service: mqtt.publish
-      data:
-        topic: myhome/dafang/night_mode/set
-        payload: "ON"
-    - service: ifttt.trigger
-      data:
-        event: Notify
-        value1: "dafang night on"
-
-- alias: Auto dafang night off
-  trigger:
-    platform: numeric_state
-    entity_id: sensor.illumination_7811dcb7a577
-    above: 200
-  action:
-    - service: mqtt.publish
-      data:
-        topic: myhome/dafang/night_mode/set
-        payload: "OFF"
-    - service: ifttt.trigger
-      data:
-        event: Notify
-        value1: "dafang night off"
-
-- alias: minio notify
-  trigger:
-      platform: mqtt
-      topic: minio
-  action:
-    - service: ifttt.trigger
-      data_template:
-        event: Notify
-        value1: "Event {{ trigger.payload_json.EventType }}, Files {{ trigger.payload_json.Key }}"       
+#- alias: Auto dafang night on
+#  trigger:
+#    platform: numeric_state
+#    entity_id: sensor.illumination_7811dcb7a577
+#    below: 95
+#  action:
+#    - service: mqtt.publish
+#      data:
+#        topic: myhome/dafang/night_mode/set
+#        payload: "ON"
+#    - service: ifttt.trigger
+#      data:
+#        event: Notify
+#        value1: "dafang night on"
+#
+#
+#- alias: Auto dafang night off
+#  trigger:
+#    platform: numeric_state
+#    entity_id: sensor.illumination_7811dcb7a577
+#    above: 200
+#  action:
+#    - service: mqtt.publish
+#      data:
+#        topic: myhome/dafang/night_mode/set
+#        payload: "OFF"
+#    - service: ifttt.trigger
+#      data:
+#        event: Notify
+#        value1: "dafang night off"
 
 #- alias: Dafang motor
 #  trigger:
