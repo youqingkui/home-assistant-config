@@ -51,6 +51,32 @@ record_video:
   sequence:
     - service: shell_command.record_video
 
+light_night_model:
+  alias: 夜灯模式
+  sequence:
+    - service: light.xiaomi_miio_set_scene
+      data:
+        entity_id: light.xiaomi_philips_smart_led_ball
+        scene: 4
+
+light_night_sleep:
+  alias: 夜灯+10分钟关
+  sequence:
+    - service: script.light_night_model
+    - service: light.xiaomi_miio_set_delayed_turn_off
+      data:
+        entity_id: light.xiaomi_philips_smart_led_ball
+        time_period: 10
+
+light_bridge_model:
+  alias: 明亮模式
+  sequence:
+    - service: light.xiaomi_miio_set_scene
+      data:
+        entity_id: light.xiaomi_philips_smart_led_ball
+        scene: 1
+
+
 
 #dafang_move_left:
 #  alias: dafang face
