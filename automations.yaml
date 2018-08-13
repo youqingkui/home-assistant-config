@@ -136,6 +136,40 @@
     - service: light.turn_off
       entity_id: light.xiaomi_philips_smart_led_ball
 
+- alias: 8:00起床灯
+  trigger:
+    platform: time
+    at: '08:00:00'
+  action:
+    - service: script.light_bridge_model
+    # 5分钟后自动关灯
+    - service: light.xiaomi_miio_set_delayed_turn_off
+      data:
+        entity_id: light.xiaomi_philips_smart_led_ball
+        time_period: 5
+
+- alias: toggle_led_ball
+  trigger:
+    platform: event
+    event_type: click
+    event_data:
+      entity_id: binary_sensor.switch_158d0002108f19
+      click_type: single
+  action:
+    service: light.toggle
+    entity_id: light.xiaomi_philips_smart_led_ball
+
+- alias: ready_sleep
+  trigger:
+    platform: event
+    event_type: long_click_press
+    event_data:
+      entity_id: binary_sensor.switch_158d0002108f19
+      click_type: single
+  action:
+    service: script.light_night_sleep
+
+
 #### 下面暂时用不到注释可以后面参考
 
 #- alias: Turn on the gateway light
