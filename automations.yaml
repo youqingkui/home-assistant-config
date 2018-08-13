@@ -128,6 +128,14 @@
         value2: "https://minio.youqingkui.me/{{trigger.payload_json.Key}}"
         value3: "https://minio.youqingkui.me/{{trigger.payload_json.Key}}"
 
+- alias: 23:45自动关灯
+  trigger:
+    platform: time
+    at: '23:45:00'
+  action:
+    - service: light.turn_off
+      entity_id: light.xiaomi_philips_smart_led_ball
+
 #### 下面暂时用不到注释可以后面参考
 
 #- alias: Turn on the gateway light
