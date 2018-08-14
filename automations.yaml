@@ -81,24 +81,24 @@
 
 - alias: motion detector
   trigger:
-      platform: mqtt
-      topic: myhome/dafang/motion
-      payload: 'ON'
+    platform: mqtt
+    topic: myhome/dafang/motion
+    payload: 'ON'
+  condition:
+    condition: or
+    conditions:
+      - condition: time
+        after: '00:00:00'
+        before: '07:00:00'
+      - condition: state
+        entity_id: device_tracker.youqingkui
+        state: "not_home"
   action:
+    - service: script.record_video
     - service: ifttt.trigger
       data:
         event: Notify
         value1: "dafang 移动"
-    - condition: or
-      conditions:
-        - condition: time
-          after: '00:00:00'
-          before: '07:00:00'
-        - condition: state
-          entity_id: device_tracker.youqingkui
-          state: "not_home"
-#    - service: script.send_record_image
-    - service: script.record_video
 
 - alias: Device online notify
   trigger:
