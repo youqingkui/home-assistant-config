@@ -128,10 +128,21 @@
         value2: "https://minio.youqingkui.me/{{trigger.payload_json.Key}}"
         value3: "https://minio.youqingkui.me/{{trigger.payload_json.Key}}"
 
+- alias: auto_light_night
+  trigger:
+    platform: time
+    at: '23:15:00'
+  action:
+    - service: script.light_night_model
+    - service: ifttt.trigger
+      data:
+        event: Notify
+        value1: 打开夜灯模式
+
 - alias: 23:45自动关灯
   trigger:
     platform: time
-    at: '23:45:00'
+    at: '23:35:00'
   action:
     - service: light.turn_off
       entity_id: light.xiaomi_philips_smart_led_ball
