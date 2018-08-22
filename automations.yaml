@@ -128,6 +128,18 @@
         value2: "https://minio.youqingkui.me/{{trigger.payload_json.Key}}"
         value3: "https://minio.youqingkui.me/{{trigger.payload_json.Key}}"
 
+- alias: auto_light_night
+  trigger:
+    platform: time
+    at: '23:15:00'
+  action:
+    - service: script.light_warm_model
+    - service: ifttt.trigger
+      data:
+        event: Notify
+        value1: 打开夜灯模式
+
+
 - alias: 23:45自动关灯
   trigger:
     platform: time
@@ -136,11 +148,13 @@
     - service: light.turn_off
       entity_id: light.xiaomi_philips_smart_led_ball
 
-- alias: 8:00起床灯
+- alias: eight_wake_up
   trigger:
     platform: time
-    at: '08:00:00'
+    at: '07:50:00'
   action:
+    - service: light.turn_on
+      entity_id: light.xiaomi_philips_smart_led_ball
     - service: script.light_bridge_model
     # 5分钟后自动关灯
     - service: light.xiaomi_miio_set_delayed_turn_off

@@ -76,6 +76,13 @@ light_bridge_model:
         entity_id: light.xiaomi_philips_smart_led_ball
         scene: 1
 
+light_warm_model:
+  alias: 温馨模式
+  sequence:
+    - service: light.xiaomi_miio_set_scene
+      data:
+        entity_id: light.xiaomi_philips_smart_led_ball
+        scene: 3
 
 
 #dafang_move_left:
