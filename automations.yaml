@@ -22,46 +22,46 @@
     service: ifttt.trigger
     data_template:
       event: Notify
-      value1: "湿度提醒 {{ states.sensor.humidity_158d00020ef39b.state }}%"      
+      value1: "湿度提醒 {{ states.sensor.humidity_158d00020ef39b.state }}%"
 
 - alias: Door Open
-  trigger: 
+  trigger:
     platform: state
     entity_id: binary_sensor.door_window_sensor_158d0002025c4b
     from: 'off'
     to: 'on'
   action:
-    - service: ifttt.trigger
-      data:
-        event: Notify
-        value1: "外门打开"
+  - service: ifttt.trigger
+    data:
+      event: Notify
+      value1: "外门打开"
 
 - alias: Door Close
-  trigger: 
+  trigger:
     platform: state
     entity_id: binary_sensor.door_window_sensor_158d0002025c4b
     from: 'on'
     to: 'off'
   action:
-    - service: ifttt.trigger
-      data:
-        event: Notify
-        value1: "外门关闭"  
+  - service: ifttt.trigger
+    data:
+      event: Notify
+      value1: "外门关闭"
 
 
 - alias: Remind Door
-  trigger: 
+  trigger:
     platform: state
     entity_id: binary_sensor.door_window_sensor_158d0002025c4b
     from: 'off'
     to: 'on'
     for:
-      minutes: 1  
+      minutes: 1
   action:
-    - service: ifttt.trigger
-      data:
-        event: Notify
-        value1: "记得关门哦"
+  - service: ifttt.trigger
+    data:
+      event: Notify
+      value1: "记得关门哦"
 
 - alias: Notify Move
   trigger:
@@ -74,10 +74,10 @@
     entity_id: device_tracker.youqingkui
     state: "not_home"
   action:
-    - service: ifttt.trigger
-      data:
-        event: Notify
-        value1: "检测到移动"
+  - service: ifttt.trigger
+    data:
+      event: Notify
+      value1: "检测到移动"
 
 - alias: motion detector
   trigger:
@@ -87,18 +87,18 @@
   condition:
     condition: or
     conditions:
-      - condition: time
-        after: '00:00:00'
-        before: '07:00:00'
-      - condition: state
-        entity_id: device_tracker.youqingkui
-        state: "not_home"
+    - condition: time
+      after: '00:00:00'
+      before: '07:00:00'
+    - condition: state
+      entity_id: device_tracker.youqingkui
+      state: "not_home"
   action:
-    - service: script.record_video
-    - service: ifttt.trigger
-      data:
-        event: Notify
-        value1: "dafang 移动"
+  - service: script.record_video
+  - service: ifttt.trigger
+    data:
+      event: Notify
+      value1: "dafang 移动"
 
 - alias: Device online notify
   trigger:
@@ -108,32 +108,32 @@
     condition: template
     value_template: "{% if 'device_tracker' in trigger.event.data.entity_id %} true {% else %} false {% endif %}"
   action:
-    - service: ifttt.trigger
-      data_template:
-        event: Notify
-        value1: "{{ state_attr(trigger.event.data.entity_id, 'friendly_name') }} now status {{ states(trigger.event.data.entity_id) }}"
+  - service: ifttt.trigger
+    data_template:
+      event: Notify
+      value1: "{{ state_attr(trigger.event.data.entity_id, 'friendly_name') }} now status {{ states(trigger.event.data.entity_id) }}"
 
 - alias: minio notify
   trigger:
-      platform: mqtt
-      topic: minio
+    platform: mqtt
+    topic: minio
   condition:
     condition: template
     value_template: "{% if 'ObjectCreated' in trigger.payload_json.EventType %} true {% else %} false {% endif %}"
   action:
-    - service: ifttt.trigger
-      data_template:
-        event: rich_notify
-        value1: "{% if 'jpg' in  trigger.payload_json.Key %} dafang with image {% else %} dafang with video {% endif%}"
-        value2: "https://minio.youqingkui.me/{{trigger.payload_json.Key}}"
-        value3: "https://minio.youqingkui.me/{{trigger.payload_json.Key}}"
+  - service: ifttt.trigger
+    data_template:
+      event: rich_notify
+      value1: "{% if 'jpg' in  trigger.payload_json.Key %} dafang with image {% else %} dafang with video {% endif%}"
+      value2: "https://minio.youqingkui.me/{{trigger.payload_json.Key}}"
+      value3: "https://minio.youqingkui.me/{{trigger.payload_json.Key}}"
 
 - alias: auto_light_night
   trigger:
     platform: time
     at: '23:15:00'
   action:
-    - service: script.light_warm_model
+  - service: script.light_warm_model
 
 
 - alias: 23:45自动关灯
@@ -141,22 +141,22 @@
     platform: time
     at: '23:35:00'
   action:
-    - service: light.turn_off
-      entity_id: light.xiaomi_philips_smart_led_ball
+  - service: light.turn_off
+    entity_id: light.xiaomi_philips_smart_led_ball
 
 - alias: eight_wake_up
   trigger:
     platform: time
     at: '07:50:00'
   action:
-    - service: light.turn_on
+  - service: light.turn_on
+    entity_id: light.xiaomi_philips_smart_led_ball
+  - service: script.light_bridge_model
+  # 5分钟后自动关灯
+  - service: light.xiaomi_miio_set_delayed_turn_off
+    data:
       entity_id: light.xiaomi_philips_smart_led_ball
-    - service: script.light_bridge_model
-    # 5分钟后自动关灯
-    - service: light.xiaomi_miio_set_delayed_turn_off
-      data:
-        entity_id: light.xiaomi_philips_smart_led_ball
-        time_period: 5
+      time_period: 5
 
 - alias: toggle_led_ball
   trigger:
@@ -178,6 +178,69 @@
       click_type: single
   action:
     service: script.light_night_sleep
+
+- alias: auto_open_air
+  trigger:
+    platform: time
+    at: '18:00:00'
+  condition:
+    condition: state
+    entity_id: fan.xiaomi_air_purifier_2s
+    state: 'off'
+  action:
+    - service: fan.turn_on
+      entity_id: fan.xiaomi_air_purifier_2s
+    - service: fan.set_speed
+      data:
+        entity_id: fan.xiaomi_air_purifier_2s
+        speed: Auto
+    - service: ifttt.trigger
+      data:
+        event: Notify
+        value1: "空气净化器Auto打开"
+
+- alias: auto_sleep_model_air
+  trigger:
+    platform: time
+    at: '23:30:00'
+  condition:
+    condition: state
+    entity_id: fan.xiaomi_air_purifier_2s
+    state: 'on'
+  action:
+    - service: fan.set_speed
+      data:
+        entity_id: fan.xiaomi_air_purifier_2s
+        speed: Silent
+    - service: ifttt.trigger
+      data:
+        event: Notify
+        value1: "空气净化器Silent打开"
+
+- alias: auto_close_air
+  trigger:
+    platform: time
+    hours: '/1'
+    seconds: 00
+  condition:
+    condition: and
+    conditions:
+    - condition: state
+      entity_id: device_tracker.rendandeiphone
+      state: 'not_home'
+    - condition: state
+      entity_id: device_tracker.youqingkui
+      state: 'not_home'
+    - condition: state
+      entity_id: fan.xiaomi_air_purifier_2s
+      state: 'on'
+  action:
+    - service: fan.turn_off
+      entity_id: fan.xiaomi_air_purifier_2s
+    - service: ifttt.trigger
+      data:
+        event: Notify
+        value1: "空气净化器已经自动关闭"
 
 
 #### 下面暂时用不到注释可以后面参考
