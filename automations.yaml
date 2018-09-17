@@ -31,10 +31,14 @@
     from: 'off'
     to: 'on'
   action:
-  - service: ifttt.trigger
-    data:
-      event: Notify
-      value1: "外门打开"
+    - service: notify.pushbullet
+      data:
+        title: "外门打开"
+        message: ""
+    - service: ifttt.trigger
+      data:
+        event: Notify
+        value1: "外门打开"
 
 - alias: Door Close
   trigger:
@@ -43,10 +47,14 @@
     from: 'on'
     to: 'off'
   action:
-  - service: ifttt.trigger
-    data:
-      event: Notify
-      value1: "外门关闭"
+    - service: notify.pushbullet
+      data:
+        title: "外门关闭"
+        message: ""
+    - service: ifttt.trigger
+      data:
+        event: Notify
+        value1: "外门关闭"
 
 
 - alias: Remind Door
@@ -58,10 +66,14 @@
     for:
       minutes: 1
   action:
-  - service: ifttt.trigger
-    data:
-      event: Notify
-      value1: "记得关门哦"
+    - service: notify.pushbullet
+      data:
+        title: "记得关门哦"
+        message: ""
+    - service: ifttt.trigger
+      data:
+        event: Notify
+        value1: "记得关门哦"
 
 - alias: Notify Move
   trigger:
@@ -74,10 +86,14 @@
     entity_id: device_tracker.youqingkui
     state: "not_home"
   action:
-  - service: ifttt.trigger
-    data:
-      event: Notify
-      value1: "检测到移动"
+    - service: notify.pushbullet
+      data:
+        title: "检测到移动"
+        message: ""
+    - service: ifttt.trigger
+      data:
+        event: Notify
+        value1: "检测到移动"
 
 - alias: motion detector
   trigger:
@@ -194,10 +210,16 @@
       data:
         entity_id: fan.xiaomi_air_purifier_2s
         speed: Auto
+    - service: notify.pushbullet
+      data:
+        title: "空气净化器Auto打开"
+        message: ""
     - service: ifttt.trigger
       data:
         event: Notify
         value1: "空气净化器Auto打开"
+
+
 
 - alias: auto_sleep_model_air
   trigger:
@@ -212,16 +234,20 @@
       data:
         entity_id: fan.xiaomi_air_purifier_2s
         speed: Silent
+    - service: notify.pushbullet
+      data:
+        title: "空气净化器Silent打开"
+        message: ""
     - service: ifttt.trigger
       data:
         event: Notify
         value1: "空气净化器Silent打开"
 
+
 - alias: auto_close_air
   trigger:
     platform: time
     hours: '/1'
-    seconds: 00
   condition:
     condition: and
     conditions:
@@ -237,11 +263,43 @@
   action:
     - service: fan.turn_off
       entity_id: fan.xiaomi_air_purifier_2s
+    - service: notify.pushbullet
+      data:
+        title: "空气净化器已经自动关闭"
+        message: ""
     - service: ifttt.trigger
       data:
         event: Notify
         value1: "空气净化器已经自动关闭"
 
+- alias: leave_close_light
+  trigger:
+    platform: time
+    minutes: '/10'
+    seconds: 00
+  condition:
+    condition: and
+    conditions:
+    - condition: state
+      entity_id: device_tracker.rendandeiphone
+      state: 'not_home'
+    - condition: state
+      entity_id: device_tracker.youqingkui
+      state: 'not_home'
+    - condition: state
+      entity_id: light.xiaomi_philips_smart_led_ball
+      state: 'on'
+  action:
+    - service: light.turn_off
+      entity_id: light.xiaomi_philips_smart_led_ball
+    - service: notify.pushbullet
+      data:
+        title: "灯球已经自动关闭"
+        message: ""
+    - service: ifttt.trigger
+      data:
+        event: Notify
+        value1: "灯球已经自动关闭"
 
 #### 下面暂时用不到注释可以后面参考
 

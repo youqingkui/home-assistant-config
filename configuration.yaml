@@ -154,6 +154,11 @@ sensor:
 ifttt:
   key: !secret ifttt_key
 
+notify:
+  - name: pushbullet
+    platform: pushbullet
+    api_key: !secret pushbullet_key
+
 device_tracker:
   - platform: xiaomi
     host: 192.168.31.1
