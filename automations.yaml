@@ -31,10 +31,6 @@
     from: 'off'
     to: 'on'
   action:
-    - service: notify.pushbullet
-      data:
-        title: "外门打开"
-        message: ""
     - service: ifttt.trigger
       data:
         event: Notify
@@ -47,10 +43,6 @@
     from: 'on'
     to: 'off'
   action:
-    - service: notify.pushbullet
-      data:
-        title: "外门关闭"
-        message: ""
     - service: ifttt.trigger
       data:
         event: Notify
@@ -66,10 +58,6 @@
     for:
       minutes: 1
   action:
-    - service: notify.pushbullet
-      data:
-        title: "记得关门哦"
-        message: ""
     - service: ifttt.trigger
       data:
         event: Notify
@@ -86,10 +74,6 @@
     entity_id: device_tracker.youqingkui
     state: "not_home"
   action:
-    - service: notify.pushbullet
-      data:
-        title: "检测到移动"
-        message: ""
     - service: ifttt.trigger
       data:
         event: Notify
@@ -210,10 +194,7 @@
       data:
         entity_id: fan.xiaomi_air_purifier_2s
         speed: Auto
-    - service: notify.pushbullet
-      data:
-        title: "空气净化器Auto打开"
-        message: ""
+
     - service: ifttt.trigger
       data:
         event: Notify
@@ -234,10 +215,7 @@
       data:
         entity_id: fan.xiaomi_air_purifier_2s
         speed: Silent
-    - service: notify.pushbullet
-      data:
-        title: "空气净化器Silent打开"
-        message: ""
+
     - service: ifttt.trigger
       data:
         event: Notify
@@ -247,7 +225,8 @@
 - alias: auto_close_air
   trigger:
     platform: time
-    hours: '/1'
+    minutes: 30
+    seconds: 00
   condition:
     condition: and
     conditions:
@@ -263,10 +242,7 @@
   action:
     - service: fan.turn_off
       entity_id: fan.xiaomi_air_purifier_2s
-    - service: notify.pushbullet
-      data:
-        title: "空气净化器已经自动关闭"
-        message: ""
+
     - service: ifttt.trigger
       data:
         event: Notify
@@ -300,6 +276,30 @@
       data:
         event: Notify
         value1: "灯球已经自动关闭"
+
+- alias: auto_hours_test
+  trigger:
+    platform: time
+    hours: '/1'
+    minutes: 50
+    seconds: 00
+  action:
+    - service: notify.pushbullet
+      data:
+        title: "auto_hours_test"
+        message: ""
+
+- alias: Air_quality_alert
+  trigger:
+    platform: numeric_state
+    entity_id: fan.xiaomi_air_purifier_2s
+    value_template: '{{ state.attributes.aqi|round }}'
+    above: 15.0
+    # below: '30'
+    # for:
+    #   minutes: 1
+  action:
+    - service: script.now_air_quality
 
 #### 下面暂时用不到注释可以后面参考
 

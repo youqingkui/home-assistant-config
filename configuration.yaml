@@ -155,7 +155,7 @@ ifttt:
   key: !secret ifttt_key
 
 notify:
-  - name: pushbullet
+  - name: Pushbullet
     platform: pushbullet
     api_key: !secret pushbullet_key
 
