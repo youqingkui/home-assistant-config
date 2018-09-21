@@ -188,18 +188,7 @@
     entity_id: fan.xiaomi_air_purifier_2s
     state: 'off'
   action:
-    - service: fan.turn_on
-      entity_id: fan.xiaomi_air_purifier_2s
-    - service: fan.set_speed
-      data:
-        entity_id: fan.xiaomi_air_purifier_2s
-        speed: Auto
-
-    - service: ifttt.trigger
-      data:
-        event: Notify
-        value1: "空气净化器Auto打开"
-
+    - service: script.open_air_auto_model
 
 
 - alias: auto_sleep_model_air
@@ -211,15 +200,7 @@
     entity_id: fan.xiaomi_air_purifier_2s
     state: 'on'
   action:
-    - service: fan.set_speed
-      data:
-        entity_id: fan.xiaomi_air_purifier_2s
-        speed: Silent
-
-    - service: ifttt.trigger
-      data:
-        event: Notify
-        value1: "空气净化器Silent打开"
+   - service: script.air_silent_model
 
 
 - alias: auto_close_air
@@ -300,6 +281,44 @@
     #   minutes: 1
   action:
     - service: script.now_air_quality
+
+- alias: back_home_open_air
+  # 3个手机中任意一台wifi连接
+  trigger:
+    - platform: state
+      entity_id: device_tracker.huawei_p1032f02542cf9f0f
+      from: 'not_home'
+      to: 'home'
+    - platform: state
+      entity_id: device_tracker.youqingkui
+      from: 'not_home'
+      to: 'home'
+    - platform: state
+      entity_id: device_tracker.rendandeiphone
+      from: 'not_home'
+      to: 'home'
+  # 如果空气净化器是关闭状态
+  condition:
+    condition: state
+    entity_id: fan.xiaomi_air_purifier_2s
+    state: 'off'
+  # 打开空气净化器
+  action:
+    - service: script.open_air_auto_model
+    # 如果时间是18:30 - 23:30，并且灯球是关闭
+    - condition: and
+      conditions:
+        - condition: time
+          after: '18:30:00'
+          before: '23:00:00'
+        - condition: state
+          entity_id: light.xiaomi_philips_smart_led_ball
+          state: 'off'
+    # 打开灯球明亮模式
+    - service: script.light_bridge_model
+
+
+
 
 #### 下面暂时用不到注释可以后面参考
 
