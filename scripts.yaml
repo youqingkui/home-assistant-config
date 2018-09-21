@@ -71,14 +71,23 @@ light_night_sleep:
 light_bridge_model:
   alias: 明亮模式
   sequence:
+    - service: light.turn_on
+      entity_id: light.xiaomi_philips_smart_led_ball
     - service: light.xiaomi_miio_set_scene
       data:
         entity_id: light.xiaomi_philips_smart_led_ball
         scene: 1
+    - service: ifttt.trigger
+      data:
+        event: Notify
+        value1: "灯球明亮模式打开"
+
 
 light_warm_model:
   alias: 温馨模式
   sequence:
+    - service: light.turn_on
+      entity_id: light.xiaomi_philips_smart_led_ball
     - service: light.xiaomi_miio_set_scene
       data:
         entity_id: light.xiaomi_philips_smart_led_ball
@@ -94,6 +103,33 @@ now_air_quality:
           "现在AQI:{{ states.fan.xiaomi_air_purifier_2s.attributes.aqi }},
           温度:{{ states.fan.xiaomi_air_purifier_2s.attributes.temperature }}°C,
           湿度:{{ states.fan.xiaomi_air_purifier_2s.attributes.humidity }}%"
+
+open_air_auto_model:
+  alias: 空气净化器自动模式
+  sequence:
+    - service: fan.turn_on
+      entity_id: fan.xiaomi_air_purifier_2s
+    - service: fan.set_speed
+      data:
+        entity_id: fan.xiaomi_air_purifier_2s
+        speed:
+    - service: ifttt.trigger
+      data:
+        event: Notify
+        value1: "空气净化器Auto打开"
+
+air_silent_model:
+  alias: 空气净化器静音模式
+  sequence:
+    - service: fan.set_speed
+      data:
+        entity_id: fan.xiaomi_air_purifier_2s
+        speed: Silent
+
+    - service: ifttt.trigger
+      data:
+        event: Notify
+        value1: "空气净化器Silent打开"
 
 
 #dafang_move_left:

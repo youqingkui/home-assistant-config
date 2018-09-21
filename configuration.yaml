@@ -170,14 +170,13 @@ xiaomi_aqara:
     - mac: !secret xiaomi_aqara_mac
       key: !secret xiaomi_aqara_key
 
-climate:
-  - platform: xiaomi_miio
-    name: 空调伴侣
-    host: 192.168.31.55
-#    host: lumi-acpartner-v3_miio78476440
-    token: !secret xiaomi_miio_climate
-    target_sensor: sensor.temperature_158d00020ef39b
-    scan_interval: 60
+#climate:
+#  - platform: xiaomi_miio
+#    name: 空调伴侣
+#    host: 192.168.31.55
+#    token: !secret xiaomi_miio_climate
+#    target_sensor: sensor.temperature_158d00020ef39b
+#    scan_interval: 60
 
 fan:
   - platform: xiaomi_miio
