@@ -142,6 +142,23 @@ air_silent_model:
       event: Notify
       value1: "空气净化器Silent打开"
 
+close_airconditioning:
+  alias: "空调:关闭"
+  sequence:
+  - service: shell_command.close_airconditioning
+  - service: ifttt.trigger
+    data:
+      event: Notify
+      value1: "空调关闭已经执行"
+
+open_airconditioning:
+  alias: "空调:打开"
+  sequence:
+  - service: shell_command.open_airconditioning
+  - service: ifttt.trigger
+    data:
+      event: Notify
+      value1: "打开空调已经执行"
 
       #dafang_move_left:
       #  alias: dafang face

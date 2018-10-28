@@ -229,6 +229,38 @@
         event: Notify
         value1: "空气净化器已经自动关闭"
 
+- alias: auto_close_airconditioning
+  trigger:
+    platform: time
+    minutes: '/10'
+    seconds: 00
+  condition:
+    condition: and
+    conditions:
+    - condition: state
+      entity_id: device_tracker.rendandeiphone
+      state: 'not_home'
+    - condition: state
+      entity_id: device_tracker.youqingkuinote9
+      state: 'not_home'
+    - condition: state
+      entity_id: binary_sensor.airconditioning
+      state: 'on'
+  action:
+    - service: script.close_airconditioning
+
+- alias: Notify Airconditioning
+  trigger:
+    platform: state
+    entity_id: binary_sensor.airconditioning
+    from: 'off'
+    to: 'on'
+  action:
+    - service: ifttt.trigger
+      data:
+        event: Notify
+        value1: "空调打开"
+
 - alias: leave_close_light
   trigger:
     platform: time
