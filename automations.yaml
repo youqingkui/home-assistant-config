@@ -71,7 +71,7 @@
     to: 'on'
   condition:
     condition: state
-    entity_id: device_tracker.youqingkui
+    entity_id: device_tracker.youqingkuinote9
     state: "not_home"
   action:
     - service: ifttt.trigger
@@ -91,7 +91,7 @@
       after: '00:00:00'
       before: '07:00:00'
     - condition: state
-      entity_id: device_tracker.youqingkui
+      entity_id: device_tracker.youqingkuinote9
       state: "not_home"
   action:
   - service: script.record_video
@@ -215,7 +215,7 @@
       entity_id: device_tracker.rendandeiphone
       state: 'not_home'
     - condition: state
-      entity_id: device_tracker.youqingkui
+      entity_id: device_tracker.youqingkuinote9
       state: 'not_home'
     - condition: state
       entity_id: fan.xiaomi_air_purifier_2s
@@ -241,7 +241,7 @@
       entity_id: device_tracker.rendandeiphone
       state: 'not_home'
     - condition: state
-      entity_id: device_tracker.youqingkui
+      entity_id: device_tracker.youqingkuinote9
       state: 'not_home'
     - condition: state
       entity_id: light.xiaomi_philips_smart_led_ball
@@ -286,7 +286,7 @@
   # 3个手机中任意一台wifi连接
   trigger:
     - platform: state
-      entity_id: device_tracker.huawei_p1032f02542cf9f0f
+      entity_id: device_tracker.youqingkuinote9
       from: 'not_home'
       to: 'home'
     - platform: state

@@ -1,266 +1,277 @@
 who_in_home:
+  alias: 在线设备
   sequence:
-    - service: ifttt.trigger
-      data_template:
-        event: Notify
-        value1: >
-          在线设备:
-          {% for state in states.device_tracker -%}
-            {% if is_state(state.entity_id, 'home') -%}
-              {{ state.attributes.friendly_name }}, 
-            {%- endif %}
-          {%- endfor %}
-
+  - service: ifttt.trigger
+    data_template:
+      event: Notify
+      value1: >
+        在线设备:
+        {% for state in states.device_tracker -%}
+          {% if is_state(state.entity_id, 'home') -%}
+            {{ state.attributes.friendly_name }},
+          {%- endif %}
+        {%- endfor %}
 
 now_temperature:
+  alias: 现在温度
   sequence:
-    - service: ifttt.trigger
-      data_template:
-        event: Notify
-        value1: "现在温度 {{ states.sensor.temperature_158d00020ef39b.state }}°C"
+  - service: ifttt.trigger
+    data_template:
+      event: Notify
+      value1: "现在温度 {{ states.sensor.temperature_158d00020ef39b.state }}°C"
 
 play_ringtone:
+  alias: 门铃
   sequence:
-    - service: xiaomi_aqara.play_ringtone
-      data:
-        gw_mac: 78:11:DC:B7:A5:77
-        ringtone_id: 11
-        ringtone_vol: 25
+  - service: xiaomi_aqara.play_ringtone
+    data:
+      gw_mac: 78:11:DC:B7:A5:77
+      ringtone_id: 11
+      ringtone_vol: 25
+      
 
+##### 大方
 dafang_snapshot:
-    sequence:
-      - service: camera.snapshot
-        data_template:
-          entity_id: "camera.dafang3"
-          filename: >
-            {% set image_name = 'hello' %}
-            /home/pi/.homeassistant/dafang_motion_snapshot/snapshot/{{image_name}}.jpg      
-      - service: ifttt.trigger
-        data_template: 
-          event: rich_notify
-          value2: "https://alexa.youqingkui.me/snapshot/{{image_name}}.jpg"
+  alias: dafang:截图
+  sequence:
+  - service: camera.snapshot
+    data_template:
+      entity_id: "camera.dafang3"
+      filename: >
+        {% set image_name = 'hello' %}
+        /home/pi/.homeassistant/dafang_motion_snapshot/snapshot/{{image_name}}.jpg
+  - service: ifttt.trigger
+    data_template:
+      event: rich_notify
+      value2: "https://alexa.youqingkui.me/snapshot/{{image_name}}.jpg"
 
 reboot_dafang:
+  alias: dafang:重启
   sequence:
-    - service: mqtt.publish
-      data:
-        topic: myhome/dafang/system/reboot
-        payload: "ON"
+  - service: mqtt.publish
+    data:
+      topic: myhome/dafang/system/reboot
+      payload: "ON"
 
 record_video:
+  alias: dafang:15s视频记录
   sequence:
-    - service: shell_command.record_video
+  - service: shell_command.record_video
 
+
+#### 灯
 light_night_model:
-  alias: 夜灯模式
+  alias: light:夜灯模式
   sequence:
-    - service: light.xiaomi_miio_set_scene
-      data:
-        entity_id: light.xiaomi_philips_smart_led_ball
-        scene: 4
+  - service: light.xiaomi_miio_set_scene
+    data:
+      entity_id: light.xiaomi_philips_smart_led_ball
+      scene: 4
 
 light_night_sleep:
-  alias: 夜灯+10分钟关
+  alias: light:夜灯+10分钟关
   sequence:
-    - service: script.light_night_model
-    - service: light.xiaomi_miio_set_delayed_turn_off
-      data:
-        entity_id: light.xiaomi_philips_smart_led_ball
-        time_period: 10
+  - service: script.light_night_model
+  - service: light.xiaomi_miio_set_delayed_turn_off
+    data:
+      entity_id: light.xiaomi_philips_smart_led_ball
+      time_period: 10
 
 light_bridge_model:
-  alias: 明亮模式
+  alias: light:明亮模式
   sequence:
-    - service: light.turn_on
+  - service: light.turn_on
+    entity_id: light.xiaomi_philips_smart_led_ball
+  - service: light.xiaomi_miio_set_scene
+    data:
       entity_id: light.xiaomi_philips_smart_led_ball
-    - service: light.xiaomi_miio_set_scene
-      data:
-        entity_id: light.xiaomi_philips_smart_led_ball
-        scene: 1
-    - service: ifttt.trigger
-      data:
-        event: Notify
-        value1: "灯球明亮模式打开"
+      scene: 1
+  - service: ifttt.trigger
+    data:
+      event: Notify
+      value1: "灯球明亮模式打开"
 
 
 light_warm_model:
-  alias: 温馨模式
+  alias: light:温馨模式
   sequence:
-    - service: light.turn_on
+  - service: light.turn_on
+    entity_id: light.xiaomi_philips_smart_led_ball
+  - service: light.xiaomi_miio_set_scene
+    data:
       entity_id: light.xiaomi_philips_smart_led_ball
-    - service: light.xiaomi_miio_set_scene
-      data:
-        entity_id: light.xiaomi_philips_smart_led_ball
-        scene: 3
+      scene: 3
 
+
+#### 空气净化器
 now_air_quality:
-  alias: 当前空气质量
+  alias: air:空气质量
   sequence:
-    - service: ifttt.trigger
-      data_template:
-        event: Notify
-        value1: >
-          "现在AQI:{{ states.fan.xiaomi_air_purifier_2s.attributes.aqi }},
-          温度:{{ states.fan.xiaomi_air_purifier_2s.attributes.temperature }}°C,
-          湿度:{{ states.fan.xiaomi_air_purifier_2s.attributes.humidity }}%"
+  - service: ifttt.trigger
+    data_template:
+      event: Notify
+      value1: >
+        "现在AQI:{{ states.fan.xiaomi_air_purifier_2s.attributes.aqi }},
+        温度:{{ states.fan.xiaomi_air_purifier_2s.attributes.temperature }}°C,
+        湿度:{{ states.fan.xiaomi_air_purifier_2s.attributes.humidity }}%"
 
 open_air_auto_model:
-  alias: 空气净化器自动模式
+  alias: air:自动模式
   sequence:
-    - service: fan.turn_on
+  - service: fan.turn_on
+    entity_id: fan.xiaomi_air_purifier_2s
+  - service: fan.set_speed
+    data:
       entity_id: fan.xiaomi_air_purifier_2s
-    - service: fan.set_speed
-      data:
-        entity_id: fan.xiaomi_air_purifier_2s
-        speed:
-    - service: ifttt.trigger
-      data:
-        event: Notify
-        value1: "空气净化器Auto打开"
+      speed:
+  - service: ifttt.trigger
+    data:
+      event: Notify
+      value1: "空气净化器Auto打开"
 
 air_silent_model:
-  alias: 空气净化器静音模式
+  alias: air:静音模式
   sequence:
-    - service: fan.set_speed
-      data:
-        entity_id: fan.xiaomi_air_purifier_2s
-        speed: Silent
+  - service: fan.set_speed
+    data:
+      entity_id: fan.xiaomi_air_purifier_2s
+      speed: Silent
 
-    - service: ifttt.trigger
-      data:
-        event: Notify
-        value1: "空气净化器Silent打开"
+  - service: ifttt.trigger
+    data:
+      event: Notify
+      value1: "空气净化器Silent打开"
 
 
-#dafang_move_left:
-#  alias: dafang face
-#  sequence:
-#    - alias: left move
-#      service: script.dafang_left_motor
-#    - delay:
-#        seconds: 1
-#    - alias: left move
-#      service: script.dafang_left_motor
-#    - delay:
-#        milliseconds: 500
-#    - alias: left move
-#      service: script.dafang_left_motor
-#    - delay:
-#        milliseconds: 500
-#    - alias: left move
-#      service: script.dafang_left_motor
-#    - delay:
-#        milliseconds: 500
-#    - alias: left move
-#      service: script.dafang_left_motor
-#    - delay:
-#        milliseconds: 500
-#    - alias: left move
-#      service: script.dafang_left_motor
-#    - delay:
-#        milliseconds: 500
-#    - alias: left move
-#      service: script.dafang_left_motor
-#    - delay:
-#        milliseconds: 500
-#    - alias: left move
-#      service: script.dafang_left_motor
-#    - delay:
-#        milliseconds: 500
-#    - alias: left move
-#      service: script.dafang_left_motor
-#    - delay:
-#        milliseconds: 500
-#    - alias: left move
-#      service: script.dafang_left_motor
-#    - delay:
-#        milliseconds: 500
-#    - alias: left move
-#      service: script.dafang_left_motor
-#    - delay:
-#        milliseconds: 500
-#    - alias: left move
-#      service: script.dafang_left_motor
-#    - delay:
-#        milliseconds: 500
-#    - alias: left move
-#      service: script.dafang_left_motor
-#    - delay:
-#        milliseconds: 500
-#
-#dafang_move_back:
-#  sequence:
-#    - service: script.dafang_right_motor
-#    - service: script.dafang_right_motor
-#    - service: script.dafang_right_motor
-#    - service: script.dafang_right_motor
-#    - service: script.dafang_right_motor
-#    - service: script.dafang_right_motor
-#    - service: script.dafang_right_motor
-#    - service: script.dafang_right_motor
-#    - service: script.dafang_right_motor
-#    - service: script.dafang_right_motor
-#
-#send_record_video:
-#  sequence:
-#    - service: mqtt.publish
-#      data:
-#        topic: myhome/dafang/send_record_video
-#        payload: "ON"
-#
-#send_record_image:
-#  sequence:
-#    - service: mqtt.publish
-#      data:
-#        topic: myhome/dafang/send_record_image
-#        payload: "ON"
-#
-#dafang_left_motor:
-#  sequence:
-#    - service: mqtt.publish
-#      data:
-#        topic: myhome/dafang/motors/horizontal/set
-#        payload: "left"
-#
-#dafang_right_motor:
-#  sequence:
-#    - service: mqtt.publish
-#      data:
-#        topic: myhome/dafang/motors/horizontal/set
-#        payload: "right"
-#
-#dafang_rtsp_restart:
-#  alias: rtsp restart
-#  sequence:
-#    - alias: stop_rtsp
-#      service: mqtt.publish
-#      data:
-#        topic: myhome/dafang/rtsp_h264_server/set
-#        payload: "OFF"
-#    - delay:
-#        seconds: 5
-#    - alias: start_rtsp
-#      service: mqtt.publish
-#      data:
-#        topic: myhome/dafang/rtsp_h264_server/set
-#        payload: "ON"
+      #dafang_move_left:
+      #  alias: dafang face
+      #  sequence:
+      #    - alias: left move
+      #      service: script.dafang_left_motor
+      #    - delay:
+      #        seconds: 1
+      #    - alias: left move
+      #      service: script.dafang_left_motor
+      #    - delay:
+      #        milliseconds: 500
+      #    - alias: left move
+      #      service: script.dafang_left_motor
+      #    - delay:
+      #        milliseconds: 500
+      #    - alias: left move
+      #      service: script.dafang_left_motor
+      #    - delay:
+      #        milliseconds: 500
+      #    - alias: left move
+      #      service: script.dafang_left_motor
+      #    - delay:
+      #        milliseconds: 500
+      #    - alias: left move
+      #      service: script.dafang_left_motor
+      #    - delay:
+      #        milliseconds: 500
+      #    - alias: left move
+      #      service: script.dafang_left_motor
+      #    - delay:
+      #        milliseconds: 500
+      #    - alias: left move
+      #      service: script.dafang_left_motor
+      #    - delay:
+      #        milliseconds: 500
+      #    - alias: left move
+      #      service: script.dafang_left_motor
+      #    - delay:
+      #        milliseconds: 500
+      #    - alias: left move
+      #      service: script.dafang_left_motor
+      #    - delay:
+      #        milliseconds: 500
+      #    - alias: left move
+      #      service: script.dafang_left_motor
+      #    - delay:
+      #        milliseconds: 500
+      #    - alias: left move
+      #      service: script.dafang_left_motor
+      #    - delay:
+      #        milliseconds: 500
+      #    - alias: left move
+      #      service: script.dafang_left_motor
+      #    - delay:
+      #        milliseconds: 500
+      #
+      #dafang_move_back:
+      #  sequence:
+      #    - service: script.dafang_right_motor
+      #    - service: script.dafang_right_motor
+      #    - service: script.dafang_right_motor
+      #    - service: script.dafang_right_motor
+      #    - service: script.dafang_right_motor
+      #    - service: script.dafang_right_motor
+      #    - service: script.dafang_right_motor
+      #    - service: script.dafang_right_motor
+      #    - service: script.dafang_right_motor
+      #    - service: script.dafang_right_motor
+      #
+      #send_record_video:
+      #  sequence:
+      #    - service: mqtt.publish
+      #      data:
+      #        topic: myhome/dafang/send_record_video
+      #        payload: "ON"
+      #
+      #send_record_image:
+      #  sequence:
+      #    - service: mqtt.publish
+      #      data:
+      #        topic: myhome/dafang/send_record_image
+      #        payload: "ON"
+      #
+      #dafang_left_motor:
+      #  sequence:
+      #    - service: mqtt.publish
+      #      data:
+      #        topic: myhome/dafang/motors/horizontal/set
+      #        payload: "left"
+      #
+      #dafang_right_motor:
+      #  sequence:
+      #    - service: mqtt.publish
+      #      data:
+      #        topic: myhome/dafang/motors/horizontal/set
+      #        payload: "right"
+      #
+      #dafang_rtsp_restart:
+      #  alias: rtsp restart
+      #  sequence:
+      #    - alias: stop_rtsp
+      #      service: mqtt.publish
+      #      data:
+      #        topic: myhome/dafang/rtsp_h264_server/set
+      #        payload: "OFF"
+      #    - delay:
+      #        seconds: 5
+      #    - alias: start_rtsp
+      #      service: mqtt.publish
+      #      data:
+      #        topic: myhome/dafang/rtsp_h264_server/set
+      #        payload: "ON"
 
-# msg_who_is_home:
-#   sequence:
-#     - service: ifttt.trigger
-#       data_template:
-#         event: >
-#           {% if is_state('device_tracker.youqingkuimbp', 'home') %}
-#             Move
-#           {% else %}
-#             OK
-#           {% endif %}
-        # message: >
-        #   {% if is_state('device_tracker.paulus', 'home') %}
-        #     Ha, Paulus is home!
-        #   {% else %}
-        #     Paulus is at {{ states('device_tracker.paulus') }}.
-        #   {% endif %}
+      # msg_who_is_home:
+      #   sequence:
+      #     - service: ifttt.trigger
+      #       data_template:
+      #         event: >
+      #           {% if is_state('device_tracker.youqingkuimbp', 'home') %}
+      #             Move
+      #           {% else %}
+      #             OK
+      #           {% endif %}
+      # message: >
+      #   {% if is_state('device_tracker.paulus', 'home') %}
+      #     Ha, Paulus is home!
+      #   {% else %}
+      #     Paulus is at {{ states('device_tracker.paulus') }}.
+      #   {% endif %}
 
 #flash_loop:
 #  alias: Flash loop

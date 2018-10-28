@@ -172,7 +172,7 @@ xiaomi_aqara:
 
 #climate:
 #  - platform: xiaomi_miio
-#    name: 空调伴侣
+#    name: air
 #    host: 192.168.31.55
 #    token: !secret xiaomi_miio_climate
 #    target_sensor: sensor.temperature_158d00020ef39b
@@ -211,12 +211,24 @@ camera:
 #    extra_arguments: -pred 1 -q:v 2
 
 
+#mqtt:
+#  # broker: 127.0.0.1
+#  discovery: true
+#  discovery_prefix: homeassistant
+#  password: !secret http_password
+##  protocol: 3.1.1
+
 mqtt:
-  # broker: 127.0.0.1
+  broker: !secret aws_broker
+  port: 8883
   discovery: true
   discovery_prefix: homeassistant
-  password: !secret http_password
-#  protocol: 3.1.1
+  client_id: basicPubSub
+  certificate: /home/pi/.homeassistant/connect_device_package/root-CA.crt
+  client_key: /home/pi/.homeassistant/connect_device_package/HA.private.key
+  client_cert: /home/pi/.homeassistant/connect_device_package/HA.cert.pem
+  tls_version: '1.2'
+  tls_insecure: false
 
 shell_command:
   record_video: "bash /home/pi/.homeassistant/dafang_hack/record_video.sh"
@@ -289,9 +301,9 @@ script: !include scripts.yaml
 #  broker: !secret aws_broker
 #  port: 8883
 #  client_id: test
-#  certificate: /Users/youqingkui/Downloads/connect_device_package/root-CA.crt
-#  client_key: /Users/youqingkui/Downloads/connect_device_package/Mac.private.key
-#  client_cert: /Users/youqingkui/Downloads/connect_device_package/Mac.cert.pem
+#  certificate: /home/pi/.homeassistant/connect_device_package/root-CA.crt
+#  client_key: /home/pi/.homeassistant/connect_device_packagee/HA.private.key
+#  client_cert: /home/pi/.homeassistant/connect_device_package/HA.cert.pem
 #  protocol: 3.1.1
 #
 #hello_mqtt:
