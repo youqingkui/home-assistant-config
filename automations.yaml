@@ -315,7 +315,7 @@
     - service: script.now_air_quality
 
 - alias: back_home_open_air
-  # 3个手机中任意一台wifi连接
+  # 3个手机中任意一台wifi连接,或者门打开
   trigger:
     - platform: state
       entity_id: device_tracker.youqingkuinote9
@@ -329,25 +329,30 @@
       entity_id: device_tracker.rendandeiphone
       from: 'not_home'
       to: 'home'
-  # 如果空气净化器是关闭状态
+    - platform: state
+      entity_id: binary_sensor.door_window_sensor_158d0002025c4b
+      from: 'off'
+      to: 'on'
+  # 如果时间是18:30 - 23:30，并且灯球是关闭
   condition:
-    condition: state
-    entity_id: fan.xiaomi_air_purifier_2s
-    state: 'off'
-  # 打开空气净化器
+    condition: and
+    conditions:
+    - condition: time
+      after: '18:30:00'
+      before: '23:00:00'
+    - condition: state
+      entity_id: light.xiaomi_philips_smart_led_ball
+      state: 'off'
   action:
-    - service: script.open_air_auto_model
-    # 如果时间是18:30 - 23:30，并且灯球是关闭
-    - condition: and
-      conditions:
-        - condition: time
-          after: '18:30:00'
-          before: '23:00:00'
-        - condition: state
-          entity_id: light.xiaomi_philips_smart_led_ball
-          state: 'off'
     # 打开灯球明亮模式
     - service: script.light_bridge_model
+    - condition: and
+      conditions:
+      - condition: state
+        entity_id: fan.xiaomi_air_purifier_2s
+        state: 'off'
+    # 打开空气净化器
+    - service: script.open_air_auto_model
 
 
 
