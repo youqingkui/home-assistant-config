@@ -86,11 +86,14 @@ light_bridge_model:
     data:
       entity_id: light.xiaomi_philips_smart_led_ball
       scene: 1
+  - service: notify.pushbullet
+    data:
+      title: "灯球"
+      message: "明亮模式打开"
   - service: ifttt.trigger
     data:
       event: Notify
       value1: "灯球明亮模式打开"
-
 
 light_warm_model:
   alias: light:温馨模式
@@ -107,6 +110,13 @@ light_warm_model:
 now_air_quality:
   alias: air:空气质量
   sequence:
+  - service: notify.pushbullet
+    data_template:
+      title: "空气质量"
+      message: >
+        "现在AQI:{{ states.fan.xiaomi_air_purifier_2s.attributes.aqi }},
+        温度:{{ states.fan.xiaomi_air_purifier_2s.attributes.temperature }}°C,
+        湿度:{{ states.fan.xiaomi_air_purifier_2s.attributes.humidity }}%"
   - service: ifttt.trigger
     data_template:
       event: Notify
@@ -123,11 +133,16 @@ open_air_auto_model:
   - service: fan.set_speed
     data:
       entity_id: fan.xiaomi_air_purifier_2s
-      speed:
+      speed: Auto
+  - service: notify.pushbullet
+    data:
+      title: "净化器"
+      message: "Auto打开"
   - service: ifttt.trigger
     data:
       event: Notify
       value1: "空气净化器Auto打开"
+
 
 air_silent_model:
   alias: air:静音模式
@@ -136,16 +151,24 @@ air_silent_model:
     data:
       entity_id: fan.xiaomi_air_purifier_2s
       speed: Silent
-
+  - service: notify.pushbullet
+    data:
+      title: "净化器"
+      message: "Silent打开"
   - service: ifttt.trigger
     data:
       event: Notify
       value1: "空气净化器Silent打开"
 
+
 close_airconditioning:
   alias: "空调:关闭"
   sequence:
   - service: shell_command.close_airconditioning
+  - service: notify.pushbullet
+    data:
+      title: "空调"
+      message: "关闭已经执行"
   - service: ifttt.trigger
     data:
       event: Notify
@@ -155,10 +178,28 @@ open_airconditioning:
   alias: "空调:打开"
   sequence:
   - service: shell_command.open_airconditioning
+  - service: notify.pushbullet
+    data:
+      title: "空调"
+      message: "打开空调已经执行"
   - service: ifttt.trigger
     data:
       event: Notify
       value1: "打开空调已经执行"
+
+airconditioning_status:
+  alias: "空调:状态"
+  sequence:
+  - service: notify.pushbullet
+    data_template:
+      title: "空调"
+      message: "{{ states('sensor.air_test') }} \n {{ now() }}"
+  - service: ifttt.trigger
+    data_template:
+      event: Notify
+      value1: "{{ states('sensor.air_test') }}"
+
+
 
       #dafang_move_left:
       #  alias: dafang face

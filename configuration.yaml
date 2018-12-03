@@ -101,6 +101,11 @@ sensor:
     command: "uptime | awk '{print $8}' | sed 's/,//g'"
     unit_of_measurement: "%"
     value_template: '{{ value | multiply(100) | round(2) }}'
+
+  - platform: command_line
+    name: air_test
+    command: "/home/pi/homeassistant/bin/python /home/pi/.homeassistant/custom_components/airconditioningcompanion.py mode"
+
 #  - platform: darksky
 #    api_key: !secret darksky_key
 #    update_interval:

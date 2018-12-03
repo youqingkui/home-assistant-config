@@ -134,6 +134,11 @@ binary_sensor.door_window_sensor_158d0002025c4b:
   homebridge_name: 门窗传感
   homebridge_visible: True
 
+sensor.air_test:
+  friendly_name: 空调模式
+  homebridge_name: 空调模式
+  homebridge_visible: True
+
 group.all_automations:
   hidden: false
 group.all_scripts:

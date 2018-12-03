@@ -48,6 +48,23 @@
         event: Notify
         value1: "外门关闭"
 
+- alias: Door Status
+  trigger:
+    platform: state
+    entity_id: binary_sensor.door_window_sensor_158d0002025c4b
+  action:
+    - service: notify.pushbullet
+      data_template:
+        title: "门"
+        message: >
+          {% if is_state('binary_sensor.door_window_sensor_158d0002025c4b', 'on') %}
+            开
+            {{now()}}
+          {% else %}
+            关
+            {{now()}}
+          {% endif %}
+
 
 - alias: Remind Door
   trigger:
@@ -108,6 +125,10 @@
     condition: template
     value_template: "{% if 'device_tracker' in trigger.event.data.entity_id %} true {% else %} false {% endif %}"
   action:
+  - service: notify.pushbullet
+    data_template:
+      title: "Wi-Fi"
+      message: "{{ state_attr(trigger.event.data.entity_id, 'friendly_name') }} now status {{ states(trigger.event.data.entity_id) }} \n{{now()}}"
   - service: ifttt.trigger
     data_template:
       event: Notify
@@ -354,6 +375,12 @@
     # 打开空气净化器
     - service: script.open_air_auto_model
 
+- alias: air_status_change
+  trigger:
+    platform: state
+    entity_id: sensor.air_test
+  action:
+    - service: script.airconditioning_status
 
 
 
