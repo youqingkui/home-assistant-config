@@ -24,29 +24,29 @@
       event: Notify
       value1: "湿度提醒 {{ states.sensor.humidity_158d00020ef39b.state }}%"
 
-- alias: Door Open
-  trigger:
-    platform: state
-    entity_id: binary_sensor.door_window_sensor_158d0002025c4b
-    from: 'off'
-    to: 'on'
-  action:
-    - service: ifttt.trigger
-      data:
-        event: Notify
-        value1: "外门打开"
-
-- alias: Door Close
-  trigger:
-    platform: state
-    entity_id: binary_sensor.door_window_sensor_158d0002025c4b
-    from: 'on'
-    to: 'off'
-  action:
-    - service: ifttt.trigger
-      data:
-        event: Notify
-        value1: "外门关闭"
+#- alias: Door Open
+#  trigger:
+#    platform: state
+#    entity_id: binary_sensor.door_window_sensor_158d0002025c4b
+#    from: 'off'
+#    to: 'on'
+#  action:
+#    - service: ifttt.trigger
+#      data:
+#        event: Notify
+#        value1: "外门打开"
+#
+#- alias: Door Close
+#  trigger:
+#    platform: state
+#    entity_id: binary_sensor.door_window_sensor_158d0002025c4b
+#    from: 'on'
+#    to: 'off'
+#  action:
+#    - service: ifttt.trigger
+#      data:
+#        event: Notify
+#        value1: "外门关闭"
 
 - alias: Door Status
   trigger:
@@ -129,10 +129,6 @@
     data_template:
       title: "Wi-Fi"
       message: "{{ state_attr(trigger.event.data.entity_id, 'friendly_name') }} now status {{ states(trigger.event.data.entity_id) }} \n{{now()}}"
-  - service: ifttt.trigger
-    data_template:
-      event: Notify
-      value1: "{{ state_attr(trigger.event.data.entity_id, 'friendly_name') }} now status {{ states(trigger.event.data.entity_id) }}"
 
 - alias: minio notify
   trigger:
@@ -245,10 +241,6 @@
     - service: fan.turn_off
       entity_id: fan.xiaomi_air_purifier_2s
 
-    - service: ifttt.trigger
-      data:
-        event: Notify
-        value1: "空气净化器已经自动关闭"
 
 - alias: auto_close_airconditioning
   trigger:
@@ -277,10 +269,10 @@
     from: 'off'
     to: 'on'
   action:
-    - service: ifttt.trigger
+    - service: notify.pushbullet
       data:
-        event: Notify
-        value1: "空调打开"
+        title: "空调打开"
+        message: ""
 
 - alias: leave_close_light
   trigger:
@@ -306,10 +298,6 @@
       data:
         title: "灯球已经自动关闭"
         message: ""
-    - service: ifttt.trigger
-      data:
-        event: Notify
-        value1: "灯球已经自动关闭"
 
 - alias: auto_hours_test
   trigger:

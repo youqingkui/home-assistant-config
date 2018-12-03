@@ -90,10 +90,6 @@ light_bridge_model:
     data:
       title: "灯球"
       message: "明亮模式打开"
-  - service: ifttt.trigger
-    data:
-      event: Notify
-      value1: "灯球明亮模式打开"
 
 light_warm_model:
   alias: light:温馨模式
@@ -117,13 +113,6 @@ now_air_quality:
         "现在AQI:{{ states.fan.xiaomi_air_purifier_2s.attributes.aqi }},
         温度:{{ states.fan.xiaomi_air_purifier_2s.attributes.temperature }}°C,
         湿度:{{ states.fan.xiaomi_air_purifier_2s.attributes.humidity }}%"
-  - service: ifttt.trigger
-    data_template:
-      event: Notify
-      value1: >
-        "现在AQI:{{ states.fan.xiaomi_air_purifier_2s.attributes.aqi }},
-        温度:{{ states.fan.xiaomi_air_purifier_2s.attributes.temperature }}°C,
-        湿度:{{ states.fan.xiaomi_air_purifier_2s.attributes.humidity }}%"
 
 open_air_auto_model:
   alias: air:自动模式
@@ -138,10 +127,6 @@ open_air_auto_model:
     data:
       title: "净化器"
       message: "Auto打开"
-  - service: ifttt.trigger
-    data:
-      event: Notify
-      value1: "空气净化器Auto打开"
 
 
 air_silent_model:
@@ -155,10 +140,6 @@ air_silent_model:
     data:
       title: "净化器"
       message: "Silent打开"
-  - service: ifttt.trigger
-    data:
-      event: Notify
-      value1: "空气净化器Silent打开"
 
 
 close_airconditioning:
@@ -169,10 +150,6 @@ close_airconditioning:
     data:
       title: "空调"
       message: "关闭已经执行"
-  - service: ifttt.trigger
-    data:
-      event: Notify
-      value1: "空调关闭已经执行"
 
 open_airconditioning:
   alias: "空调:打开"
@@ -182,10 +159,6 @@ open_airconditioning:
     data:
       title: "空调"
       message: "打开空调已经执行"
-  - service: ifttt.trigger
-    data:
-      event: Notify
-      value1: "打开空调已经执行"
 
 airconditioning_status:
   alias: "空调:状态"
@@ -194,10 +167,6 @@ airconditioning_status:
     data_template:
       title: "空调"
       message: "{{ states('sensor.air_test') }} \n {{ now() }}"
-  - service: ifttt.trigger
-    data_template:
-      event: Notify
-      value1: "{{ states('sensor.air_test') }}"
 
 
 
