@@ -4,7 +4,7 @@ FILE=`date +%Y%m%d%H%M%S.mp4`
 SAVE_DIR="/data/minio/dafang/video"
 SUB_DIR="$(date +%Y%m%d)"
 RECORDING_PATH="$SAVE_DIR/$SUB_DIR/$FILE"
-VIDEO_IP="rtsp://DaFang:8554/unicast"
+VIDEO_IP="rtsp://192.168.31.187:8554/unicast"
 notify_file="https://minio.youqingkui.me/dafang/video/$SUB_DIR/$FILE"
 
 
@@ -24,4 +24,17 @@ if ffmpeg -stimeout 10000000 -rtsp_transport tcp -y -i "$VIDEO_IP" -vcodec copy 
         "value1":"hello",
         "value2":"'$notify_file'",
         "value3":"'$notify_file'"}'
+
+    curl -X POST \
+      https://api.pushbullet.com/v2/pushes \
+      -H 'Access-Token: o.qG1UpoJZEuCGsizto1v6RCwinkO77Jlg' \
+      -H 'Content-Type: application/json' \
+      -H 'cache-control: no-cache' \
+      -d '{
+        "type":"file",
+        "body": "video",
+        "file_name":"'$FILE'",
+        "file_type": "video/mp4",
+        "file_url":"'$notify_file'"
+    }'
 fi
