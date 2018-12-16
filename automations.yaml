@@ -10,8 +10,8 @@
   action:
     - service: notify.pushbullet
       data_template:
-        title: ""
-        message: "温度提醒 {{ states.sensor.temperature_158d00020ef39b.state }}°C"
+        title: "温度提醒 {{ states.sensor.temperature_158d00020ef39b.state }}°C"
+        message: ""
 
 - alias: Humidity Alert
   trigger:
@@ -21,8 +21,8 @@
   action:
     - service: notify.pushbullet
       data_template:
-        title: ""
-        message: "湿度提醒 {{ states.sensor.humidity_158d00020ef39b.state }}%"
+        title: "湿度提醒 {{ states.sensor.humidity_158d00020ef39b.state }}%"
+        message: ""
 
 #- alias: Door Open
 #  trigger:
@@ -77,8 +77,8 @@
   action:
     - service: notify.pushbullet
       data:
-        title: ""
-        message: "记得关门哦"
+        title: "记得关门哦"
+        message: ""
 
 - alias: Notify Move
   trigger:
@@ -93,8 +93,8 @@
   action:
     - service: notify.pushbullet
       data:
-        title: ""
-        message: "检测到移动"
+        title: "检测到移动"
+        message: ""
 
 - alias: motion detector
   trigger:
@@ -114,8 +114,8 @@
   - service: script.record_video
   - service: notify.pushbullet
     data:
-      title: "dafang"
-      message: "移动"
+      title: "dafang移动"
+      message: ""
 
 - alias: Device online notify
   trigger:
