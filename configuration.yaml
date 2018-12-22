@@ -4,8 +4,8 @@ homeassistant:
   # Name of the location where Home Assistant is running
   name: Home
   # Location required to calculate the time the sun rises and sets
-  latitude: 22.5333
-  longitude: 114.1333
+  latitude: !secret home1_latitude
+  longitude: !secret home1_longitude
   # Impacts weather/sunrise data (altitude above sea level in meters)
   elevation: 0
   # metric for Metric, imperial for Imperial
@@ -169,6 +169,12 @@ device_tracker:
     host: 192.168.31.1
     password: !secret mi_route
     consider_home: 120
+  - platform: owntracks_http
+  - platform: icloud
+    username: !secret icloud_user
+    password: !secret icloud_password
+    account_name: youqingicloud
+    max_interval: 60
 
 xiaomi_aqara:
   gateways:
@@ -254,6 +260,16 @@ light:
     host: 192.168.31.15
     token: !secret philips_light2_token
 
+zone:
+  - name: Work1
+    latitude: !secret work1_latitude
+    longitude: !secret work1_longitude
+    radius: 500
+
+  - name: Work2
+    latitude: !secret work2_latitude
+    longitude: !secret work2_longitude
+    radius: 500
 
 # Text to speech
 tts:
