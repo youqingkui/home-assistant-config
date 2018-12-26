@@ -8,10 +8,10 @@
     # for:
     #   minutes: 1
   action:
-    service: ifttt.trigger
-    data_template:
-      event: Notify
-      value1: "温度提醒 {{ states.sensor.temperature_158d00020ef39b.state }}°C"
+    - service: notify.pushbullet
+      data_template:
+        title: "温度提醒 {{ states.sensor.temperature_158d00020ef39b.state }}°C"
+        message: ""
 
 - alias: Humidity Alert
   trigger:
@@ -19,34 +19,10 @@
     entity_id: sensor.humidity_158d00020ef39b
     above: '80'
   action:
-    service: ifttt.trigger
-    data_template:
-      event: Notify
-      value1: "湿度提醒 {{ states.sensor.humidity_158d00020ef39b.state }}%"
-
-#- alias: Door Open
-#  trigger:
-#    platform: state
-#    entity_id: binary_sensor.door_window_sensor_158d0002025c4b
-#    from: 'off'
-#    to: 'on'
-#  action:
-#    - service: ifttt.trigger
-#      data:
-#        event: Notify
-#        value1: "外门打开"
-#
-#- alias: Door Close
-#  trigger:
-#    platform: state
-#    entity_id: binary_sensor.door_window_sensor_158d0002025c4b
-#    from: 'on'
-#    to: 'off'
-#  action:
-#    - service: ifttt.trigger
-#      data:
-#        event: Notify
-#        value1: "外门关闭"
+    - service: notify.pushbullet
+      data_template:
+        title: "湿度提醒 {{ states.sensor.humidity_158d00020ef39b.state }}%"
+        message: ""
 
 - alias: Door Status
   trigger:
@@ -75,10 +51,11 @@
     for:
       minutes: 1
   action:
-    - service: ifttt.trigger
-      data:
-        event: Notify
-        value1: "记得关门哦"
+    - service: notify.pushbullet
+      data_template:
+        title: "记得关门哦 \n {{ now() }}"
+        message: ""
+
 
 - alias: Notify Move
   trigger:
@@ -91,10 +68,10 @@
     entity_id: device_tracker.youqingkuinote9
     state: "not_home"
   action:
-    - service: ifttt.trigger
-      data:
-        event: Notify
-        value1: "检测到移动"
+    - service: notify.pushbullet
+      data_template:
+        title: "检测到移动 \n {{ now() }}"
+        message: ""
 
 - alias: motion detector
   trigger:
@@ -113,9 +90,9 @@
   action:
   - service: script.record_video
   - service: ifttt.trigger
-    data:
+    data_template:
       event: Notify
-      value1: "dafang 移动"
+      value1: "dafang 移动 \n {{ now() }}"
 
 - alias: Device online notify
   trigger:
@@ -148,9 +125,15 @@
 - alias: auto_light_night
   trigger:
     platform: time
-    at: '23:15:00'
+    at: '23:00:00'
+  condition:
+    condition: and
+    conditions:
+    - condition: state
+      entity_id: light.xiaomi_philips_smart_led_ball
+      state: 'on'
   action:
-  - service: script.light_warm_model
+    - service: script.light_warm_model
 
 
 - alias: 23:45自动关灯
@@ -160,6 +143,7 @@
   action:
   - service: light.turn_off
     entity_id: light.xiaomi_philips_smart_led_ball
+
 
 - alias: eight_wake_up
   trigger:
@@ -175,6 +159,7 @@
       entity_id: light.xiaomi_philips_smart_led_ball
       time_period: 5
 
+
 - alias: toggle_led_ball
   trigger:
     platform: event
@@ -186,6 +171,7 @@
     service: light.toggle
     entity_id: light.xiaomi_philips_smart_led_ball
 
+
 - alias: ready_sleep
   trigger:
     platform: event
@@ -195,6 +181,7 @@
       click_type: single
   action:
     service: script.light_night_sleep
+
 
 - alias: auto_open_air
   trigger:
@@ -262,6 +249,7 @@
   action:
     - service: script.close_airconditioning
 
+
 - alias: Notify Airconditioning
   trigger:
     platform: state
@@ -273,6 +261,7 @@
       data:
         title: "空调打开"
         message: ""
+
 
 - alias: leave_close_light
   trigger:
@@ -299,6 +288,7 @@
         title: "灯球已经自动关闭"
         message: ""
 
+
 - alias: auto_hours_test
   trigger:
     platform: time
@@ -311,6 +301,7 @@
         title: "auto_hours_test"
         message: ""
 
+
 - alias: Air_quality_alert
   trigger:
     platform: numeric_state
@@ -322,6 +313,7 @@
     #   minutes: 1
   action:
     - service: script.now_air_quality
+
 
 - alias: back_home_open_air
   # 3个手机中任意一台wifi连接,或者门打开
@@ -363,6 +355,7 @@
     # 打开空气净化器
     - service: script.open_air_auto_model
 
+
 - alias: air_status_change
   trigger:
     platform: state
@@ -371,6 +364,61 @@
     - service: script.airconditioning_status
 
 
+- alias: button_toggle_light_ball
+  trigger:
+    platform: event
+    event_type: xiaomi_aqara.click
+    event_data:
+      entity_id: binary_sensor.switch_158d0001eb6251
+      click_type: single
+  action:
+    - service: light.toggle
+      entity_id: light.xiaomi_philips_smart_led_ball
+
+- alias: button_light_bridge_model
+  trigger:
+    platform: event
+    event_type: xiaomi_aqara.click
+    event_data:
+      entity_id: binary_sensor.switch_158d0001eb6251
+      click_type: double
+  action:
+    - service: script.light_bridge_model
+
+- alias: button_light_warm_model
+  trigger:
+    platform: event
+    event_type: xiaomi_aqara.click
+    event_data:
+      entity_id: binary_sensor.switch_158d0001eb6251
+      click_type: double
+  action:
+    - service: script.light_warm_model
+
+
+#- alias: Door Open
+#  trigger:
+#    platform: state
+#    entity_id: binary_sensor.door_window_sensor_158d0002025c4b
+#    from: 'off'
+#    to: 'on'
+#  action:
+#    - service: ifttt.trigger
+#      data:
+#        event: Notify
+#        value1: "外门打开"
+#
+#- alias: Door Close
+#  trigger:
+#    platform: state
+#    entity_id: binary_sensor.door_window_sensor_158d0002025c4b
+#    from: 'on'
+#    to: 'off'
+#  action:
+#    - service: ifttt.trigger
+#      data:
+#        event: Notify
+#        value1: "外门关闭"
 
 #### 下面暂时用不到注释可以后面参考
 
