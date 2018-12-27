@@ -108,26 +108,26 @@ sensor:
   - platform: cpuspeed
   - platform: systemmonitor
     resources:
-      - type: disk_use_percent
-        arg: /home
-      - type: memory_free
-      - type: network_in
-        arg: wlan0
-      - type: network_out
-        arg: wlan0
-      - type: process
+#      - type: disk_use_percent
+#        arg: /home
+#      - type: memory_free
+#      - type: network_in
+#        arg: wlan0
+#      - type: network_out
+#        arg: wlan0
+#      - type: process
       - type: load_1m
       - type: load_5m
       - type: load_15m
       - type: processor_use
-  - platform: time_date
-    display_options:
-      - 'time'
-      - 'date'
-      - 'date_time'
-      - 'time_date'
-      - 'time_utc'
-      - 'beat'
+#  - platform: time_date
+#    display_options:
+#      - 'time'
+#      - 'date'
+#      - 'date_time'
+#      - 'time_date'
+#      - 'time_utc'
+#      - 'beat'
 #  - platform: darksky
 #    api_key: !secret darksky_key
 #    update_interval:
@@ -299,6 +299,11 @@ light:
     name: Xiaomi Philips Smart LED Ball
     host: 192.168.31.15
     token: !secret philips_light2_token
+  - platform: xiaomi_miio
+    name: PHILIPS EYECARE SMART LAMP 2
+    host: 192.168.31.253
+    token: !secret philips_lamp_token
+    model: philips.light.sread1
 
 zone:
   - name: Work1
