@@ -72,5 +72,18 @@ def upload_file():
             s3.upload_file(file_path, 'dafang', s3_name)
             return "ok"
 
+@app.route('/script_do')
+def script_do():
+    url = "http://192.168.31.238:8123/api/services/script/open_door_shell"
+
+    querystring = {"api_password": "xz5xwK3WXhbPKUjW"}
+
+    payload = ""
+    headers = {}
+    response = requests.request("POST", url, data=payload, headers=headers, params=querystring)
+
+    return response.text
+
+
 if __name__ == '__main__':
     app.run(host='0.0.0.0')

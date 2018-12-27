@@ -31,19 +31,40 @@ play_ringtone:
       
 
 ##### 大方
-dafang_snapshot:
+#dafang_snapshot:
+#  alias: dafang:截图
+#  sequence:
+#  - service: camera.snapshot
+#    data_template:
+#      entity_id: "camera.dafang3"
+#      filename: >
+#        {% set image_name = 'hello' %}
+#        /home/pi/.homeassistant/dafang_motion_snapshot/snapshot/{{image_name}}.jpg
+#  - service: ifttt.trigger
+#    data_template:
+#      event: rich_notify
+#      value2: "https://alexa.youqingkui.me/snapshot/{{image_name}}.jpg"
+
+##### 大方
+dafang_snapshot2:
   alias: dafang:截图
   sequence:
+  - service: input_text.set_value
+    entity_id: input_text.text1
+    data_template:
+      value: "snapshot_{{now().year}}{{now().month}}{{now().day}}{{now().hour}}{{now().minute}}{{now().second}}.jpg"
   - service: camera.snapshot
     data_template:
-      entity_id: "camera.dafang3"
-      filename: >
-        {% set image_name = 'hello' %}
-        /home/pi/.homeassistant/dafang_motion_snapshot/snapshot/{{image_name}}.jpg
-  - service: ifttt.trigger
+      entity_id: "camera.dafang4"
+      filename: "/home/pi/.homeassistant/www/snapshot/{{states('input_text.text1')}}"
+  - service: notify.h5
     data_template:
-      event: rich_notify
-      value2: "https://alexa.youqingkui.me/snapshot/{{image_name}}.jpg"
+      title: 'dafang截图'
+      message: ""
+      data:
+        image: "https://youqingkui.me/local/snapshot/{{states('input_text.text1')}}"
+        url: "https://youqingkui.me/local/snapshot/{{states('input_text.text1')}}"
+
 
 reboot_dafang:
   alias: dafang:重启
@@ -86,7 +107,7 @@ light_bridge_model:
     data:
       entity_id: light.xiaomi_philips_smart_led_ball
       scene: 1
-  - service: notify.pushbullet
+  - service: notify.h5
     data:
       title: "灯球"
       message: "明亮模式打开"
@@ -106,7 +127,7 @@ light_warm_model:
 now_air_quality:
   alias: air:空气质量
   sequence:
-  - service: notify.pushbullet
+  - service: notify.h5
     data_template:
       title: "空气质量"
       message: >
@@ -123,7 +144,7 @@ open_air_auto_model:
     data:
       entity_id: fan.xiaomi_air_purifier_2s
       speed: Auto
-  - service: notify.pushbullet
+  - service: notify.h5
     data:
       title: "净化器"
       message: "Auto打开"
@@ -136,7 +157,7 @@ air_silent_model:
     data:
       entity_id: fan.xiaomi_air_purifier_2s
       speed: Silent
-  - service: notify.pushbullet
+  - service: notify.h5
     data:
       title: "净化器"
       message: "Silent打开"
@@ -146,7 +167,7 @@ close_airconditioning:
   alias: "空调:关闭"
   sequence:
   - service: shell_command.close_airconditioning
-  - service: notify.pushbullet
+  - service: notify.h5
     data:
       title: "空调"
       message: "关闭已经执行"
@@ -155,7 +176,7 @@ open_airconditioning:
   alias: "空调:打开"
   sequence:
   - service: shell_command.open_airconditioning
-  - service: notify.pushbullet
+  - service: notify.h5
     data:
       title: "空调"
       message: "打开空调已经执行"
@@ -163,10 +184,30 @@ open_airconditioning:
 airconditioning_status:
   alias: "空调:状态"
   sequence:
-  - service: notify.pushbullet
+  - service: notify.h5
     data_template:
       title: "空调"
       message: "{{ states('sensor.air_test') }} \n {{ now() }}"
+
+open_door_push:
+  alias: "门:推送"
+  sequence:
+  - service: notify.h5
+    data:
+      message: "需要开门吗?"
+      data:
+        actions:
+          - action: open_door
+            title: 开门
+
+open_door:
+  alias: "门:执行开门"
+  sequence:
+  - service: shell_command.open_door
+  - service: notify.h5
+    data:
+      title: "门"
+      message: "执行开门"
 
 
 

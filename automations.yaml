@@ -8,7 +8,7 @@
     # for:
     #   minutes: 1
   action:
-    - service: notify.pushbullet
+    - service: notify.h5
       data_template:
         title: "温度提醒 {{ states.sensor.temperature_158d00020ef39b.state }}°C"
         message: ""
@@ -19,7 +19,7 @@
     entity_id: sensor.humidity_158d00020ef39b
     above: '80'
   action:
-    - service: notify.pushbullet
+    - service: notify.h5
       data_template:
         title: "湿度提醒 {{ states.sensor.humidity_158d00020ef39b.state }}%"
         message: ""
@@ -30,7 +30,7 @@
     platform: state
     entity_id: binary_sensor.door_window_sensor_158d0002025c4b
   action:
-    - service: notify.pushbullet
+    - service: notify.h5
       data_template:
         title: "门"
         message: >
@@ -52,7 +52,7 @@
     for:
       minutes: 1
   action:
-    - service: notify.pushbullet
+    - service: notify.h5
       data_template:
         title: "记得关门哦 \n {{ now() }}"
         message: ""
@@ -69,7 +69,7 @@
     entity_id: device_tracker.youqingkuinote9
     state: "not_home"
   action:
-    - service: notify.pushbullet
+    - service: notify.h5
       data_template:
         title: "检测到移动 \n {{ now() }}"
 
@@ -90,10 +90,28 @@
       state: "not_home"
   action:
   - service: script.record_video
-  - service: notify.pushbullet
+  - service: notify.h5
     data_template:
       title: "dafang移动 \n {{ now() }}"
       message: ""
+
+- alias: motion detector snapshot
+  trigger:
+    platform: mqtt
+    topic: myhome/dafang/motion
+    payload: 'ON'
+  condition:
+    condition: or
+    conditions:
+    - condition: time
+      after: '00:00:00'
+      before: '07:00:00'
+    - condition: state
+      entity_id: device_tracker.youqingkuinote9
+      state: "not_home"
+  action:
+  - service: script.dafang_snapshot2
+
 
 - alias: Device online notify
   trigger:
@@ -101,12 +119,14 @@
     event_type: 'state_changed'
   condition:
     condition: template
-    value_template: "{% if 'device_tracker' in trigger.event.data.entity_id %} true {% else %} false {% endif %}"
+    value_template: "{% if 'device_tracker' in trigger.event.data.entity_id  %} true {% else %} false {% endif %}"
   action:
-  - service: notify.pushbullet
+  - service: notify.h5
     data_template:
       title: "Wi-Fi"
-      message: "{{ state_attr(trigger.event.data.entity_id, 'friendly_name') }} now status {{ states(trigger.event.data.entity_id) }} \n{{now()}}"
+      message: "{{ state_attr(trigger.event.data.entity_id, 'friendly_name') }} now status {{ states(trigger.event.data.entity_id) }} \n{{now().hour}}"
+      data:
+        tag: "{{trigger.event.data.entity_id}}-{{states(trigger.event.data.entity_id)}}-{{now().day}}-{{now().hour}}"
 
 
 - alias: minio notify
@@ -260,7 +280,7 @@
     from: 'off'
     to: 'on'
   action:
-    - service: notify.pushbullet
+    - service: notify.h5
       data:
         title: "空调打开"
         message: ""
@@ -286,7 +306,7 @@
   action:
     - service: light.turn_off
       entity_id: light.xiaomi_philips_smart_led_ball
-    - service: notify.pushbullet
+    - service: notify.h5
       data:
         title: "灯球已经自动关闭"
         message: ""
@@ -299,7 +319,7 @@
     minutes: 50
     seconds: 00
   action:
-    - service: notify.pushbullet
+    - service: notify.h5
       data:
         title: "auto_hours_test"
         message: ""
@@ -358,6 +378,14 @@
     # 打开空气净化器
     - service: script.open_air_auto_model
 
+- alias: open_door_action
+  trigger:
+    platform: event
+    event_type: html5_notification.clicked
+    event_data:
+      action: open_door
+  action:
+    - service: script.open_door
 
 - alias: air_status_change
   trigger:
@@ -401,37 +429,37 @@
     - service: script.light_warm_model
 
 
-- alias: button_toggle_light_ball
-  trigger:
-    platform: event
-    event_type: xiaomi_aqara.click
-    event_data:
-      entity_id: binary_sensor.switch_158d0001eb6251
-      click_type: single
-  action:
-    - service: light.toggle
-      entity_id: light.xiaomi_philips_smart_led_ball
+#- alias: button_toggle_light_ball
+#  trigger:
+#    platform: event
+#    event_type: xiaomi_aqara.click
+#    event_data:
+#      entity_id: binary_sensor.switch_158d0001eb6251
+#      click_type: single
+#  action:
+#    - service: light.toggle
+#      entity_id: light.xiaomi_philips_smart_led_ball
+#
+#- alias: button_light_bridge_model
+#  trigger:
+#    platform: event
+#    event_type: xiaomi_aqara.click
+#    event_data:
+#      entity_id: binary_sensor.switch_158d0001eb6251
+#      click_type: double
+#  action:
+#    - service: script.light_bridge_model
 
-- alias: button_light_bridge_model
-  trigger:
-    platform: event
-    event_type: xiaomi_aqara.click
-    event_data:
-      entity_id: binary_sensor.switch_158d0001eb6251
-      click_type: double
-  action:
-    - service: script.light_bridge_model
 
-
-- alias: button_light_warm_model
-  trigger:
-    platform: event
-    event_type: xiaomi_aqara.click
-    event_data:
-      entity_id: binary_sensor.switch_158d0001eb6251
-      click_type: double
-  action:
-    - service: script.light_warm_model
+#- alias: button_light_warm_model
+#  trigger:
+#    platform: event
+#    event_type: xiaomi_aqara.click
+#    event_data:
+#      entity_id: binary_sensor.switch_158d0001eb6251
+#      click_type: double
+#  action:
+#    - service: script.light_warm_model
 
 
 #- alias: Door Open
