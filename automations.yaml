@@ -1,4 +1,5 @@
-- alias: Temperature Alert
+### 普通通知
+- alias: temperature_alert
   trigger:
     platform: numeric_state
     entity_id: sensor.temperature_158d00020ef39b
@@ -13,7 +14,7 @@
         title: "温度提醒 {{ states.sensor.temperature_158d00020ef39b.state }}°C"
         message: ""
 
-- alias: Humidity Alert
+- alias: humidity_alert
   trigger:
     platform: numeric_state
     entity_id: sensor.humidity_158d00020ef39b
@@ -24,8 +25,24 @@
         title: "湿度提醒 {{ states.sensor.humidity_158d00020ef39b.state }}%"
         message: ""
 
+- alias: minio_notify
+  trigger:
+    platform: mqtt
+    topic: minio
+  condition:
+    condition: template
+    value_template: "{% if 'ObjectCreated' in trigger.payload_json.EventType %} true {% else %} false {% endif %}"
+  action:
+  - service: ifttt.trigger
+    data_template:
+      event: rich_notify
+      value1: "{% if 'jpg' in  trigger.payload_json.Key %} dafang with image {% else %} dafang with video {% endif%}"
+      value2: "https://minio.youqingkui.me/{{trigger.payload_json.Key}}"
+      value3: "https://minio.youqingkui.me/{{trigger.payload_json.Key}}"
 
-- alias: Door Status
+
+### 门
+- alias: door_status
   trigger:
     platform: state
     entity_id: binary_sensor.door_window_sensor_158d0002025c4b
@@ -42,8 +59,7 @@
             {{now()}}
           {% endif %}
 
-
-- alias: Remind Door
+- alias: remind_door
   trigger:
     platform: state
     entity_id: binary_sensor.door_window_sensor_158d0002025c4b
@@ -57,8 +73,28 @@
         title: "记得关门哦 \n {{ now() }}"
         message: ""
 
+- alias: connec_wifi_open_door
+  trigger:
+    platform: state
+    entity_id: device_tracker.youqingkuinote9
+    from: 'not_home'
+    to: 'home'
+  action:
+    - service: script.open_door
+    - service: script.open_door_push
 
-- alias: Notify Move
+- alias: open_door_action
+  trigger:
+    platform: event
+    event_type: html5_notification.clicked
+    event_data:
+      action: open_door
+  action:
+    - service: script.open_door
+
+
+### 安防
+- alias: notify_move
   trigger:
     platform: state
     entity_id: binary_sensor.motion_sensor_158d0001f3d0bb
@@ -73,8 +109,7 @@
       data_template:
         title: "检测到移动 \n {{ now() }}"
 
-
-- alias: motion detector
+- alias: motion_detector
   trigger:
     platform: mqtt
     topic: myhome/dafang/motion
@@ -95,7 +130,7 @@
       title: "dafang移动 \n {{ now() }}"
       message: ""
 
-- alias: motion detector snapshot
+- alias: motion_detector_snapshot
   trigger:
     platform: mqtt
     topic: myhome/dafang/motion
@@ -113,7 +148,8 @@
   - service: script.dafang_snapshot2
 
 
-- alias: Device online notify
+### WI-FI
+- alias: device_online_notify
   trigger:
     platform: event
     event_type: 'state_changed'
@@ -133,22 +169,7 @@
         tag: "{{trigger.event.data.entity_id}}-{{states(trigger.event.data.entity_id)}}-{{now().day}}-{{now().hour}}"
 
 
-- alias: minio notify
-  trigger:
-    platform: mqtt
-    topic: minio
-  condition:
-    condition: template
-    value_template: "{% if 'ObjectCreated' in trigger.payload_json.EventType %} true {% else %} false {% endif %}"
-  action:
-  - service: ifttt.trigger
-    data_template:
-      event: rich_notify
-      value1: "{% if 'jpg' in  trigger.payload_json.Key %} dafang with image {% else %} dafang with video {% endif%}"
-      value2: "https://minio.youqingkui.me/{{trigger.payload_json.Key}}"
-      value3: "https://minio.youqingkui.me/{{trigger.payload_json.Key}}"
-
-
+### 灯
 - alias: auto_light_night
   trigger:
     platform: time
@@ -162,15 +183,13 @@
   action:
     - service: script.light_warm_model
 
-
-- alias: 23:45自动关灯
+- alias: sleep_close_light
   trigger:
     platform: time
     at: '23:35:00'
   action:
   - service: light.turn_off
     entity_id: light.xiaomi_philips_smart_led_ball
-
 
 - alias: eight_wake_up
   trigger:
@@ -185,110 +204,6 @@
     data:
       entity_id: light.xiaomi_philips_smart_led_ball
       time_period: 5
-
-
-- alias: toggle_led_ball
-  trigger:
-    platform: event
-    event_type: click
-    event_data:
-      entity_id: binary_sensor.switch_158d0002108f19
-      click_type: single
-  action:
-    service: light.toggle
-    entity_id: light.xiaomi_philips_smart_led_ball
-
-
-- alias: ready_sleep
-  trigger:
-    platform: event
-    event_type: long_click_press
-    event_data:
-      entity_id: binary_sensor.switch_158d0002108f19
-      click_type: single
-  action:
-    service: script.light_night_sleep
-
-
-- alias: auto_open_air
-  trigger:
-    platform: time
-    at: '18:00:00'
-  condition:
-    condition: state
-    entity_id: fan.xiaomi_air_purifier_2s
-    state: 'off'
-  action:
-    - service: script.open_air_auto_model
-
-
-- alias: auto_sleep_model_air
-  trigger:
-    platform: time
-    at: '23:30:00'
-  condition:
-    condition: state
-    entity_id: fan.xiaomi_air_purifier_2s
-    state: 'on'
-  action:
-   - service: script.air_silent_model
-
-
-- alias: auto_close_air
-  trigger:
-    platform: time
-    minutes: 30
-    seconds: 00
-  condition:
-    condition: and
-    conditions:
-    - condition: state
-      entity_id: device_tracker.rendandeiphone
-      state: 'not_home'
-    - condition: state
-      entity_id: device_tracker.youqingkuinote9
-      state: 'not_home'
-    - condition: state
-      entity_id: fan.xiaomi_air_purifier_2s
-      state: 'on'
-  action:
-    - service: fan.turn_off
-      entity_id: fan.xiaomi_air_purifier_2s
-
-
-- alias: auto_close_airconditioning
-  trigger:
-    platform: time
-    minutes: '/10'
-    seconds: 00
-  condition:
-    condition: and
-    conditions:
-    - condition: state
-      entity_id: device_tracker.rendandeiphone
-      state: 'not_home'
-    - condition: state
-      entity_id: device_tracker.youqingkuinote9
-      state: 'not_home'
-    - condition: state
-      entity_id: binary_sensor.airconditioning
-      state: 'on'
-  action:
-    - service: script.close_airconditioning
-
-
-- alias: Notify Airconditioning
-  trigger:
-    platform: state
-    entity_id: binary_sensor.airconditioning
-    from: 'off'
-    to: 'on'
-  action:
-    - service: notify.h5
-      data:
-        title: "空调打开"
-        message: ""
-
 
 - alias: leave_close_light
   trigger:
@@ -315,21 +230,133 @@
         title: "灯球已经自动关闭"
         message: ""
 
+#- alias: toggle_led_ball
+#  trigger:
+#    platform: event
+#    event_type: click
+#    event_data:
+#      entity_id: binary_sensor.switch_158d0002108f19
+#      click_type: single
+#  action:
+#    service: light.toggle
+#    entity_id: light.xiaomi_philips_smart_led_ball
+#
+#- alias: ready_sleep
+#  trigger:
+#    platform: event
+#    event_type: long_click_press
+#    event_data:
+#      entity_id: binary_sensor.switch_158d0002108f19
+#      click_type: single
+#  action:
+#    service: script.light_night_sleep
 
-- alias: auto_hours_test
+#- alias: button_toggle_light_ball
+#  trigger:
+#    platform: event
+#    event_type: xiaomi_aqara.click
+#    event_data:
+#      entity_id: binary_sensor.switch_158d0001eb6251
+#      click_type: single
+#  action:
+#    - service: light.toggle
+#      entity_id: light.xiaomi_philips_smart_led_ball
+#
+#- alias: button_light_bridge_model
+#  trigger:
+#    platform: event
+#    event_type: xiaomi_aqara.click
+#    event_data:
+#      entity_id: binary_sensor.switch_158d0001eb6251
+#      click_type: double
+#  action:
+#    - service: script.light_bridge_model
+#
+#- alias: button_light_warm_model
+#  trigger:
+#    platform: event
+#    event_type: xiaomi_aqara.click
+#    event_data:
+#      entity_id: binary_sensor.switch_158d0001eb6251
+#      click_type: double
+#  action:
+#    - service: script.light_warm_model
+
+
+### 空调
+- alias: auto_close_airconditioning
   trigger:
     platform: time
-    hours: '/1'
-    minutes: 50
+    minutes: '/10'
     seconds: 00
+  condition:
+    condition: and
+    conditions:
+    - condition: state
+      entity_id: device_tracker.rendandeiphone
+      state: 'not_home'
+    - condition: state
+      entity_id: device_tracker.youqingkuinote9
+      state: 'not_home'
+    - condition: state
+      entity_id: binary_sensor.airconditioning
+      state: 'on'
   action:
-    - service: notify.h5
-      data:
-        title: "auto_hours_test"
-        message: ""
+    - service: script.close_airconditioning
+
+- alias: air_status_change
+  trigger:
+    platform: state
+    entity_id: sensor.air_test
+  action:
+    - service: script.airconditioning_status
 
 
-- alias: Air_quality_alert
+### 空气净化器
+- alias: auto_open_air
+  trigger:
+    platform: time
+    at: '18:00:00'
+  condition:
+    condition: state
+    entity_id: fan.xiaomi_air_purifier_2s
+    state: 'off'
+  action:
+    - service: script.open_air_auto_model
+
+- alias: auto_sleep_model_air
+  trigger:
+    platform: time
+    at: '23:30:00'
+  condition:
+    condition: state
+    entity_id: fan.xiaomi_air_purifier_2s
+    state: 'on'
+  action:
+   - service: script.air_silent_model
+
+- alias: auto_close_air
+  trigger:
+    platform: time
+    minutes: 30
+    seconds: 00
+  condition:
+    condition: and
+    conditions:
+    - condition: state
+      entity_id: device_tracker.rendandeiphone
+      state: 'not_home'
+    - condition: state
+      entity_id: device_tracker.youqingkuinote9
+      state: 'not_home'
+    - condition: state
+      entity_id: fan.xiaomi_air_purifier_2s
+      state: 'on'
+  action:
+    - service: fan.turn_off
+      entity_id: fan.xiaomi_air_purifier_2s
+
+- alias: air_quality_alert
   trigger:
     platform: numeric_state
     entity_id: fan.xiaomi_air_purifier_2s
@@ -342,6 +369,7 @@
     - service: script.now_air_quality
 
 
+# 综合自动化
 - alias: back_home_open_air
   # 3个手机中任意一台wifi连接,或者门打开
   trigger:
@@ -382,479 +410,5 @@
     # 打开空气净化器
     - service: script.open_air_auto_model
 
-- alias: open_door_action
-  trigger:
-    platform: event
-    event_type: html5_notification.clicked
-    event_data:
-      action: open_door
-  action:
-    - service: script.open_door
-
-- alias: air_status_change
-  trigger:
-    platform: state
-    entity_id: sensor.air_test
-  action:
-    - service: script.airconditioning_status
-
-
-- alias: button_toggle_light_ball
-  trigger:
-    platform: event
-    event_type: xiaomi_aqara.click
-    event_data:
-      entity_id: binary_sensor.switch_158d0001eb6251
-      click_type: single
-  action:
-    - service: light.toggle
-      entity_id: light.xiaomi_philips_smart_led_ball
-
-
-- alias: button_light_bridge_model
-  trigger:
-    platform: event
-    event_type: xiaomi_aqara.click
-    event_data:
-      entity_id: binary_sensor.switch_158d0001eb6251
-      click_type: double
-  action:
-    - service: script.light_bridge_model
-
-
-- alias: button_light_warm_model
-  trigger:
-    platform: event
-    event_type: xiaomi_aqara.click
-    event_data:
-      entity_id: binary_sensor.switch_158d0001eb6251
-      click_type: double
-  action:
-    - service: script.light_warm_model
-
-- alias: connec_wifi_open_door
-  trigger:
-    platform: state
-    entity_id: device_tracker.youqingkuinote9
-    from: 'not_home'
-    to: 'home'
-  action:
-    - service: script.open_door
-    - service: script.open_door_push
-
-
-
-
-#- alias: button_toggle_light_ball
-#  trigger:
-#    platform: event
-#    event_type: xiaomi_aqara.click
-#    event_data:
-#      entity_id: binary_sensor.switch_158d0001eb6251
-#      click_type: single
-#  action:
-#    - service: light.toggle
-#      entity_id: light.xiaomi_philips_smart_led_ball
-#
-#- alias: button_light_bridge_model
-#  trigger:
-#    platform: event
-#    event_type: xiaomi_aqara.click
-#    event_data:
-#      entity_id: binary_sensor.switch_158d0001eb6251
-#      click_type: double
-#  action:
-#    - service: script.light_bridge_model
-
-
-
-#- alias: button_toggle_light_ball
-#  trigger:
-#    platform: event
-#    event_type: xiaomi_aqara.click
-#    event_data:
-#      entity_id: binary_sensor.switch_158d0001eb6251
-#      click_type: single
-#  action:
-#    - service: light.toggle
-#      entity_id: light.xiaomi_philips_smart_led_ball
-#
-#- alias: button_light_bridge_model
-#  trigger:
-#    platform: event
-#    event_type: xiaomi_aqara.click
-#    event_data:
-#      entity_id: binary_sensor.switch_158d0001eb6251
-#      click_type: double
-#  action:
-#    - service: script.light_bridge_model
-
-
-#- alias: button_light_warm_model
-#  trigger:
-#    platform: event
-#    event_type: xiaomi_aqara.click
-#    event_data:
-#      entity_id: binary_sensor.switch_158d0001eb6251
-#      click_type: double
-#  action:
-#    - service: script.light_warm_model
-
-
-#- alias: Door Open
-#  trigger:
-#    platform: state
-#    entity_id: binary_sensor.door_window_sensor_158d0002025c4b
-#    from: 'off'
-#    to: 'on'
-#  action:
-#    - service: ifttt.trigger
-#      data:
-#        event: Notify
-#        value1: "外门打开"
-#
-#- alias: Door Close
-#  trigger:
-#    platform: state
-#    entity_id: binary_sensor.door_window_sensor_158d0002025c4b
-#    from: 'on'
-#    to: 'off'
-#  action:
-#    - service: ifttt.trigger
-#      data:
-#        event: Notify
-#        value1: "外门关闭"
-
-#- alias: Door Open
-#  trigger:
-#    platform: state
-#    entity_id: binary_sensor.door_window_sensor_158d0002025c4b
-#    from: 'off'
-#    to: 'on'
-#  action:
-#    - service: ifttt.trigger
-#      data:
-#        event: Notify
-#        value1: "外门打开"
-#
-#- alias: Door Close
-#  trigger:
-#    platform: state
-#    entity_id: binary_sensor.door_window_sensor_158d0002025c4b
-#    from: 'on'
-#    to: 'off'
-#  action:
-#    - service: ifttt.trigger
-#      data:
-#        event: Notify
-#        value1: "外门关闭"
-
-#### 下面暂时用不到注释可以后面参考
-
-#- alias: Turn on the gateway light
-#  trigger:
-#    platform: event
-#    event_type: click
-#    event_data:
-#      entity_id: binary_sensor.switch_158d0002108f19
-#      click_type: double
-#  action:
-#    service: light.toggle
-#    entity_id: light.gateway_light_7811dcb7a577
-#
-#- alias: Back Home
-#  trigger:
-#    platform: state
-#    entity_id: device_tracker.youqingkui
-#    from: 'not_home'
-#    to: 'home'
-#  condition:
-#    condition: and
-#    conditions:
-#      - condition: time
-#        after: '19:00:00'
-#        before: '07:00:00'
-#      - condition: numeric_state
-#        entity_id: sensor.illumination_7811dcb7a577
-#        below: 450
-#  action:
-#    - service: light.turn_on
-#      entity_id: light.gateway_light_7811dcb7a577
-#    - service: ifttt.trigger
-#      data:
-#        event: Notify
-#        value1: "youqingkui go home"
-#
-#- alias: Door Open Ringtone
-#  trigger:
-#    platform: state
-#    entity_id: binary_sensor.door_window_sensor_158d0002025c4b
-#    from: 'off'
-#    to: 'on'
-#  condition:
-#    condition: time
-#    after: '19:00:00'
-#    before: '07:00:00'
-#  action:
-#    - service: script.play_ringtone
-#
-#- alias: Auto Close Gateway Light
-#  trigger:
-#    platform: state
-#    entity_id: light.gateway_light_7811dcb7a577
-#    from: 'off'
-#    to: 'on'
-#    for:
-#      minutes: 3
-#  action:
-#    - service: light.turn_off
-#      entity_id: light.gateway_light_7811dcb7a577
-#
-#- alias: Open Night Light
-#  trigger:
-#    platform: state
-#    entity_id: binary_sensor.motion_sensor_158d0001f3d0bb
-#    from: 'off'
-#    to: 'on'
-#
-#  condition:
-#    condition: and
-#    conditions:
-#      - condition: time
-#        after: '19:00:00'
-#        before: '07:00:00'
-#      - condition: numeric_state
-#        entity_id: sensor.illumination_7811dcb7a577
-#        below: 80
-#
-#  action:
-#    - service: light.turn_on
-#      entity_id: light.gateway_light_7811dcb7a577
-#
-#- alias: Multiple Move
-#  trigger:
-#    platform: state
-#    entity_id: binary_sensor.motion_sensor_158d0001f3d0bb
-#    to: 'on'
-#  action:
-#    - service: ifttt.trigger
-#      data:
-#        event: Notify
-#        value1: "持续移动"
-#
-#- alias: Auto Restart RTSP
-#  trigger:
-#    platform: time
-#    minutes: '/60'
-#    seconds: 00
-#  action:
-#    - service: script.dafang_rtsp_restart
-#    - service: ifttt.trigger
-#      data_template:
-#        event: Notify
-#        value1: "自动重启RTSP"
-
-#- alias: Auto dafang night on
-#  trigger:
-#    platform: numeric_state
-#    entity_id: sensor.illumination_7811dcb7a577
-#    below: 95
-#  action:
-#    - service: mqtt.publish
-#      data:
-#        topic: myhome/dafang/night_mode/set
-#        payload: "ON"
-#    - service: ifttt.trigger
-#      data:
-#        event: Notify
-#        value1: "dafang night on"
-#
-#
-#- alias: Auto dafang night off
-#  trigger:
-#    platform: numeric_state
-#    entity_id: sensor.illumination_7811dcb7a577
-#    above: 200
-#  action:
-#    - service: mqtt.publish
-#      data:
-#        topic: myhome/dafang/night_mode/set
-#        payload: "OFF"
-#    - service: ifttt.trigger
-#      data:
-#        event: Notify
-#        value1: "dafang night off"
-
-#- alias: Dafang motor
-#  trigger:
-#    platform: state
-#    entity_id: device_tracker.youqingkui
-#    to: 'not_home'
-
-
-# - alias: Close Gateway Light
-#   trigger:
-#     platform: state
-#     entity_id: binary_sensor.motion_sensor_158d0001f3d0bb
-#     from: 'on'
-#     to: 'off'
-#     for:
-#       minutes: 5
-#   action:
-#     - service: light.turn_off
-#       entity_id: light.gateway_light_7811dcb7a577
-
-#- action:
-#  - data:
-#      event: Notify
-#      value1: "dangfang 检测到移动"
-#    service: ifttt.trigger
-#  alias: motion detector
-#  condition: []
-#  id: '9522507257594'
-#  trigger:
-#  - payload: 'ON'
-#    platform: mqtt
-#    topic: myhome/dafang/motion
-
-
-# - alias: Device online notify
-#   trigger:
-#     platform: state
-#     from: 'not_home'
-#     to: 'home'
-#   action:
-#     - service: ifttt.trigger
-#       data_template:
-#         event: Notify
-#         value1: "{{ states.entity_id }} go home"
-
-# - alias: Device online notify
-#   trigger:
-#     platform: event
-#     event_type: 'state_changed'
-#   action:
-#     - service: ifttt.trigger
-#       data_template:
-#         event: Notify3
-#         value1: "{{ trigger.event.data }} state_changed"
-
-#- alias: Play Music
-#  trigger:
-#    platform: event
-#    event_type: click
-#    event_data:
-#      entity_id: binary_sensor.switch_158d0002108f19
-#      click_type: double
-#  action:
-#    - platform: command_line
-#      command: python /home/pi/.homeassistantustom_components/love_music.py START
-
-# - alias: "Startup Notification"
-#   trigger:
-#     - platform: event
-#       event_type: homeassistant_start
-#   action:
-#     - service: notify.notify
-#       data:
-#         title: ok123
-#         message: ninini
-
-# - alias: "Send message at lunch time"
-#   trigger:
-#     platform: time
-#     hours: 10
-#     minutes: 2
-#     seconds: 0
-#   action:
-#     service: notify.notify
-#     data:
-#       message: '该吃午饭了'
-#       title: '为了健康，请规律饮食！'
-
-# - alias: "test device_tracker"
-#   trigger:
-#     platform: template
-#     entity_id: device_tracker.huawei_p10
-#     value_template: "{% if is('device_tracker.huawei_p10', 'home') %}true{% endif %}"
-
-#   action:
-#     - service: notify.app_push
-#       data:
-#         title: device_tracker
-#         message: "home"
-
-
-#- alias: "Startup Notification"
-#  trigger:
-#    - platform: state
-#      entity_id: sensor.Temperature
-#  action:
-#    - service: notify.app_push
-#      data:
-#        title: ok123
-#        message: "{{states.sensor.Temperature.state}} hours"
-#        # message: "{{states.device_tracker.youqingkuimbp.attributes.latitude}} value"
-#
-#
-#- alias: "xiaomi Notification"
-#  trigger:
-#    - platform: state
-#      entity_id:
-#        - device_tracker.youqingkuimbp
-#        - device_tracker.youqingdeiPhone
-#  action:
-#    - service: notify.sns_email
-#      data:
-#        target: arn:aws:sns:ap-northeast-2:887438777172:Home_Assistant
-#        title: ok123
-#        # message: "{{trigger.entity_id}} {{states.device_tracker.youqingkuimbp}} value"
-#        message: "{{trigger.entity_id}} {{trigger.entity_id.state}} value"
-#
-#
-#- alias: "Temperature Notification"
-#  trigger:
-#    - platform: state
-#      entity_id:
-#        - sensor.temperature_158d0001f538b8
-#  action:
-#    - service: ifttt.trigger
-#      data:
-#        event: Temperature
-#        Value1: "{{states.sensor.temperature_158d0001f538b8.state}} push"
-#    - service: notify.app_push
-#      data:
-#        title: "Temperature Notification"
-#        message: "{{states.sensor.temperature_158d0001f538b8.state}} push"
-#
-#- alias: "Move Notification"
-#  trigger:
-#    - platform: state
-#      entity_id:
-#        - binary_sensor.motion_sensor_158d0001ae8149
-#  action:
-#    - service: ifttt.trigger
-#      data:
-#        event: Move
-#        Value1: "{{ states.binary_sensor.motion_sensor_158d0001ae8149.to_state.state }} move"
-#
-#    - service: notify.app_push
-#      data:
-#        title: "Move Notification"
-#        message: "{{states.binary_sensor.motion_sensor_158d0001ae8149.state}} push"
-
-
-# - alias: If there is motion and its dark turn on the gateway light
-#   trigger:
-#     platform: state
-#     entity_id: binary_sensor.motion_sensor_158d0001ae8149
-#     from: 'off'
-#     to: 'on'
-
-#   action:
-#     - service: light.turn_on
-#       entity_id: light.gateway_light_7811dc64ea36
-#       data:
-#         brightness: 5
 
 

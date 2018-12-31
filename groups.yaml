@@ -74,7 +74,25 @@ CookRoom:
   entities:
     - binary_sensor.natgas_sensor_158d000116bc78
 
+AutoLight:
+  name: 自动化-灯
+  view: yes
+  entities:
+    - automation.auto_light_night
+    - automation.sleep_close_light
+    - automation.eight_wake_up
+    - automation.toggle_led_ball
+    - automation.ready_sleep
+    - automation.leave_close_light
 
+AutoDoor:
+  name: 自动化-门
+  view: yes
+  entities:
+    - automation.door_status
+    - automation.remind_door
+    - automation.connec_wifi_open_door
+    - automation.open_door_action
 
 # rooms_view:
 #   name: ROOMS

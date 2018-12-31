@@ -248,7 +248,7 @@ camera:
 #   input: -rtsp_transport tcp -i rtsp://192.168.31.187:8554/unicast
 #   extra_arguments: -pred 1 -q:v 2
   - platform: generic
-    name: DaFang4
+    name: DaFang3
     username: root
     password: ismart12
     authentication: basic
