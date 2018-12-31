@@ -14,7 +14,7 @@ homeassistant:
   time_zone: Asia/Shanghai
   # Customization file
   customize: !include customize.yaml
-  # whitelist_external_dirs: /home/pi/.homeassistant/dafang_motion_snapshot/snapshot/  
+  whitelist_external_dirs: /home/pi/.homeassistant/www/snapshot/
 
 
 # Show links to resources in log and frontend
@@ -108,18 +108,26 @@ sensor:
   - platform: cpuspeed
   - platform: systemmonitor
     resources:
-      - type: disk_use_percent
-        arg: /home
-      - type: memory_free
-      - type: network_in
-        arg: wlan0
-      - type: network_out
-        arg: wlan0
-      - type: process
+#      - type: disk_use_percent
+#        arg: /home
+#      - type: memory_free
+#      - type: network_in
+#        arg: wlan0
+#      - type: network_out
+#        arg: wlan0
+#      - type: process
       - type: load_1m
       - type: load_5m
       - type: load_15m
       - type: processor_use
+#  - platform: time_date
+#    display_options:
+#      - 'time'
+#      - 'date'
+#      - 'date_time'
+#      - 'time_date'
+#      - 'time_utc'
+#      - 'beat'
 #  - platform: darksky
 #    api_key: !secret darksky_key
 #    update_interval:
@@ -177,6 +185,10 @@ notify:
   - name: Pushbullet
     platform: pushbullet
     api_key: !secret pushbullet_key
+  - platform: html5
+    name: h5
+    gcm_api_key: !secret gcm_api_key
+    gcm_sender_id: !secret gcm_sender_id
 
 device_tracker:
   - platform: xiaomi
@@ -202,6 +214,11 @@ xiaomi_aqara:
 #    token: !secret xiaomi_miio_climate
 #    target_sensor: sensor.temperature_158d00020ef39b
 #    scan_interval: 60
+
+input_text:
+  text1:
+    name: snapshot
+    initial: ""
 
 fan:
   - platform: xiaomi_miio
@@ -267,6 +284,7 @@ shell_command:
   record_video: "bash /home/pi/.homeassistant/dafang_hack/record_video.sh"
   close_airconditioning: "/home/pi/homeassistant/bin/python /home/pi/.homeassistant/custom_components/airconditioningcompanion.py off"
   open_airconditioning: "/home/pi/homeassistant/bin/python /home/pi/.homeassistant/custom_components/airconditioningcompanion.py on"
+  open_door: "bash /home/pi/.homeassistant/custom_components/open_door.sh"
 
 binary_sensor:
   - platform: command_line
@@ -281,6 +299,11 @@ light:
     name: Xiaomi Philips Smart LED Ball
     host: 192.168.31.15
     token: !secret philips_light2_token
+#  - platform: xiaomi_miio
+#    name: PHILIPS EYECARE SMART LAMP 2
+#    host: 192.168.31.253
+#    token: !secret philips_lamp_token
+#    model: philips.light.sread1
 
 zone:
   - name: Work1
@@ -296,6 +319,11 @@ zone:
 # Text to speech
 tts:
   - platform: google
+  - platform: amazon_polly
+    aws_access_key_id: !secret amazon_polly_key
+    aws_secret_access_key: !secret amazon_polly_access_key
+    region_name: ap-northeast-2
+    voice: Zhiyu
 
 logger:
   default: info
