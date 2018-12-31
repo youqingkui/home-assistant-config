@@ -96,11 +96,11 @@ sensor:
     # If errors occur, remove degree symbol below
     unit_of_measurement: "°C"
     value_template: '{{ value | multiply(0.001) | round(1) }}'
-  - platform: command_line
-    name: CPU_1mine
-    command: "uptime | awk '{print $8}' | sed 's/,//g'"
-    unit_of_measurement: "%"
-    value_template: '{{ value | multiply(100) | round(2) }}'
+#  - platform: command_line
+#    name: CPU_1mine
+#    command: "uptime | awk '{print $8}' | sed 's/,//g'"
+#    unit_of_measurement: "%"
+#    value_template: '{{ value | multiply(100) | round(2) }}'
 
   - platform: command_line
     name: air_test

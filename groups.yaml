@@ -8,6 +8,7 @@ rooms_view:
     - group.BedRoom2
     - group.Balcony
     - group.Dafang3
+    - gorup.PiStatus
 
 automation_view:
     name: Automation
@@ -95,6 +96,18 @@ AutoDoor:
     - automation.remind_door
     - automation.connec_wifi_open_door
     - automation.open_door_action
+
+PiStatus:
+  name: PI 运行状态
+  view: no
+  entities:
+    - sensor.cpu_speed
+    - sensor.processor_use
+    - sensor.cpu_temperature
+    - sensor.load_1m
+    - sensor.load_5m
+    - sensor.load_15m
+
 
 # rooms_view:
 #   name: ROOMS
