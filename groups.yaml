@@ -38,6 +38,8 @@ LivingRoom:
     - switch.original_xiaomi_mi_smart_wifi_socket
     - switch.original_xiaomi_mi_smart_wifi_socket_usb
     - sensor.air_test
+    - binary_sensor.switch_158d0001eb6251
+    - binary_sensor.switch_158d0002108f19_2
 
 Dafang3:
   entities:
