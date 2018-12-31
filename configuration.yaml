@@ -120,6 +120,11 @@ sensor:
       - type: load_5m
       - type: load_15m
       - type: processor_use
+  - platform: imap
+    server: imap.gmail.com
+    port: 993
+    username: !secret gmail_name
+    password: !secret gmail_one_passwd
 #  - platform: time_date
 #    display_options:
 #      - 'time'
