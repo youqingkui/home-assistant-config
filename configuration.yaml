@@ -196,11 +196,11 @@ device_tracker:
     password: !secret mi_route
     consider_home: 120
   - platform: owntracks_http
-  - platform: icloud
-    username: !secret icloud_user
-    password: !secret icloud_password
-    account_name: youqingicloud
-    max_interval: 60
+#  - platform: icloud
+#    username: !secret icloud_user
+#    password: !secret icloud_password
+#    account_name: youqingicloud
+#    max_interval: 60
 
 xiaomi_aqara:
   gateways:
@@ -304,6 +304,7 @@ light:
 #    host: 192.168.31.253
 #    token: !secret philips_lamp_token
 #    model: philips.light.sread1
+
 
 zone:
   - name: Work1
