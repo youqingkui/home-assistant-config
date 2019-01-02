@@ -55,7 +55,7 @@ dafang_snapshot2:
       value: "snapshot_{{now().year}}{{now().month}}{{now().day}}{{now().hour}}{{now().minute}}{{now().second}}.jpg"
   - service: camera.snapshot
     data_template:
-      entity_id: "camera.dafang4"
+      entity_id: "camera.dafang3"
       filename: "/home/pi/.homeassistant/www/snapshot/{{states('input_text.text1')}}"
   - service: notify.h5
     data_template:
