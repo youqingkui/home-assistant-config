@@ -73,15 +73,15 @@
         title: "记得关门哦 \n {{ now() }}"
         message: ""
 
-- alias: connec_wifi_open_door
-  trigger:
-    platform: state
-    entity_id: device_tracker.youqingkuinote9
-    from: 'not_home'
-    to: 'home'
-  action:
-    - service: script.open_door
-    - service: script.open_door_push
+#- alias: connec_wifi_open_door
+#  trigger:
+#    platform: state
+#    entity_id: device_tracker.youqingkuinote9
+#    from: 'not_home'
+#    to: 'home'
+#  action:
+#    - service: script.open_door
+#    - service: script.open_door_push
 
 - alias: open_door_action
   trigger:
@@ -160,6 +160,8 @@
       value_template: "{% if 'device_tracker' in trigger.event.data.entity_id  %} true {% else %} false {% endif %}"
     - condition: template
       value_template: "{% if is_state_attr(trigger.event.data.entity_id, 'source_type', 'router')%} true {% else %} false {% endif %}"
+    - condition: template
+      value_template: "{% if not state_attr(trigger.event.data.entity_id, 'not_notify') %} true {% else %} false {% endif %}"
   action:
   - service: notify.h5
     data_template:
