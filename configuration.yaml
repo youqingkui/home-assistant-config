@@ -120,11 +120,11 @@ sensor:
       - type: load_5m
       - type: load_15m
       - type: processor_use
-  - platform: imap
-    server: imap.gmail.com
-    port: 993
-    username: !secret gmail_name
-    password: !secret gmail_one_passwd
+#  - platform: imap
+#    server: imap.gmail.com
+#    port: 993
+#    username: !secret gmail_name
+#    password: !secret gmail_one_passwd
 #  - platform: time_date
 #    display_options:
 #      - 'time'
@@ -200,12 +200,11 @@ device_tracker:
     host: 192.168.31.1
     password: !secret mi_route
     consider_home: 120
-  - platform: owntracks_http
-  - platform: icloud
-    username: !secret icloud_user
-    password: !secret icloud_password
-    account_name: youqingicloud
-    max_interval: 60
+#  - platform: icloud
+#    username: !secret icloud_user
+#    password: !secret icloud_password
+#    account_name: youqingicloud
+#    max_interval: 60
 
 xiaomi_aqara:
   gateways:
@@ -334,8 +333,9 @@ tts:
 logger:
   default: info
   logs:
-    homeassistant.components.mqtt: error
-    hbmqtt.broker: error
+    homeassistant.core: debug
+    homeassistant.components.mqtt: info
+    hbmqtt.broker: info
     hbmqtt.mqtt.protocol.handler: error
     transitions.core: warn
 
