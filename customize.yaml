@@ -260,7 +260,7 @@ automation.back_home_open_air:
 group.all_automations:
   hidden: false
 group.all_scripts:
-  hidden: false  
+  hidden: false
 
 
 

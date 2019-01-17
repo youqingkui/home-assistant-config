@@ -1,27 +1,14 @@
-rooms_view:
-  name: ROOMS
-  view: yes
-  entities:
-    - group.LivingRoom
-    - group.CookRoom
-    - group.BedRoom1
-    - group.BedRoom2
-    - group.Balcony
-    - group.Dafang3
-    - gorup.PiStatus
-
 automation_view:
     name: Automation
     view: yes
     entities:
       - group.all_automations
-      - group.all_scripts
 
-camera_view:
-    name: Camera
-    view: yes
-    entities:
-      - group.Dafang3    
+scripts_view:
+  name: Script
+  view: yes
+  entities:
+    - group.all_scripts
 
 LivingRoom:
   name: 客厅
@@ -76,26 +63,6 @@ CookRoom:
   icon: mdi:pot
   entities:
     - binary_sensor.natgas_sensor_158d000116bc78
-
-AutoLight:
-  name: 自动化-灯
-  view: yes
-  entities:
-    - automation.auto_light_night
-    - automation.sleep_close_light
-    - automation.eight_wake_up
-    - automation.toggle_led_ball
-    - automation.ready_sleep
-    - automation.leave_close_light
-
-AutoDoor:
-  name: 自动化-门
-  view: yes
-  entities:
-    - automation.door_status
-    - automation.remind_door
-    - automation.connec_wifi_open_door
-    - automation.open_door_action
 
 PiStatus:
   name: PI 运行状态
