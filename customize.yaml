@@ -160,6 +160,12 @@ sensor.xiaomi_ap_aqi:
 sensor.xiaomi_ap_humid:
   icon: mdi:water-percent
 
+sensor.illumination_7811dcb2a03e:
+  hidden: true
+
+binary_sensor.airconditioning:
+  hidden: true
+
 device_tracker.a438cccafb57:
   not_notify: yes
 
