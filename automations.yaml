@@ -370,6 +370,67 @@
   action:
     - service: script.now_air_quality
 
+- alias: xiaomi_ap_get_mode
+  initial_state: true
+  trigger:
+    platform: time
+    seconds: /5
+  action:
+    service: input_select.select_option
+    data_template:
+      entity_id: input_select.xiaomi_ap_mode
+      option: >
+        {% if states.fan.xiaomi_air_purifier_2s.attributes.mode == "auto" %}自动
+        {% elif states.fan.xiaomi_air_purifier_2s.attributes.mode == "silent" %}睡眠
+        {% elif states.fan.xiaomi_air_purifier_2s.attributes.mode == "favorite" %}最爱
+        {% elif states.fan.xiaomi_air_purifier_2s.attributes.mode == "idle" %}待机
+        {% endif %}
+
+- alias: xiaomi_ap_set_mode
+  initial_state: true
+  trigger:
+    platform: state
+    entity_id: input_select.xiaomi_ap_mode
+  action:
+    service: fan.turn_on
+    data_template:
+      entity_id: fan.xiaomi_air_purifier_2s
+      speed: >
+        {% if states.input_select.xiaomi_ap_mode.state == "自动" %}Auto
+        {% elif states.input_select.xiaomi_ap_mode.state == "睡眠" %}Silent
+        {% elif states.input_select.xiaomi_ap_mode.state == "最爱" %}Favorite
+        {% elif states.input_select.xiaomi_ap_mode.state == "待机" %}Idle
+        {% endif %}
+
+#- alias: xiaomi_ap_get_led
+#  initial_state: true
+#  trigger:
+#    platform: time
+#    seconds: /5
+#  action:
+#    service: input_select.select_option
+#    data_template:
+#      entity_id: input_select.xiaomi_ap_led
+#      option: >
+#        {% if states.fan.xiaomi_air_purifier_2s.attributes.led_brightness == 0 %}亮光
+#        {% elif states.fan.xiaomi_air_purifier_2s.attributes.led_brightness == 1 %}微光
+#        {% elif states.fan.xiaomi_air_purifier_2s.attributes.led_brightness == 2 %}关闭
+#        {% endif %}
+#
+#- alias: xiaomi_ap_set_led
+#  initial_state: true
+#  trigger:
+#    platform: state
+#    entity_id: input_select.xiaomi_ap_led
+#  action:
+#    service: fan.xiaomi_miio_set_led_brightness
+#    data_template:
+#      entity_id: fan.xiaomi_air_purifier_2s
+#      brightness: >
+#        {% if states.input_select.xiaomi_ap_led.state == "亮光" %}0
+#        {% elif states.input_select.xiaomi_ap_led.state == "微光" %}1
+#        {% elif states.input_select.xiaomi_ap_led.state == "关闭" %}2
+#        {% endif %}
 
 # 综合自动化
 - alias: back_home_open_air

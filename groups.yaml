@@ -108,6 +108,22 @@ PiStatus:
     - sensor.load_5m
     - sensor.load_15m
 
+xiaomi_air_purifier:
+  name: 空气净化器
+  view: no
+  control: hidden
+  entities:
+    - fan.xiaomi_air_purifier_2s
+    - switch.xiaomi_ap_buzzer
+    - switch.xiaomi_ap_child
+    - switch.xiaomi_ap_led
+    - sensor.xiaomi_ap_aqi
+    - sensor.xiaomi_ap_temp
+    - sensor.xiaomi_ap_humid
+    - sensor.xiaomi_ap_filter_used
+    - sensor.xiaomi_ap_filter_life
+    - input_select.xiaomi_ap_mode
+
 
 # rooms_view:
 #   name: ROOMS
