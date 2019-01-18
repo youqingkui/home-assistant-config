@@ -185,6 +185,9 @@ killall mosquitto_sub.bin 2> /dev/null
     "${TOPIC}/system/reboot ON")
       /sbin/reboot
     ;;
+    "${TOPIC}/system/autodiscovery ON")
+      /system/sdcard/scripts/mqtt-autodiscovery.sh >/dev/null
+    ;;
     "${TOPIC}/set "*)
       COMMAND=$(echo "$line" | awk '{print $2}')
       #echo "$COMMAND"

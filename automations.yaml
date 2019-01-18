@@ -432,6 +432,8 @@
 #        {% elif states.input_select.xiaomi_ap_led.state == "关闭" %}2
 #        {% endif %}
 
+
+
 # 综合自动化
 - alias: back_home_open_air
   # 3个手机中任意一台wifi连接,或者门打开

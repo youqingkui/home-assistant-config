@@ -361,7 +361,8 @@ logger:
   default: info
   logs:
     homeassistant.core: debug
-#    homeassistant.components.mqtt: info
+    homeassistant.components.mqtt: debug
+    homeassistant.components.xiaomi_aqara: debug
 #    hbmqtt.broker: info
 #    hbmqtt.mqtt.protocol.handler: error
 #    transitions.core: warn
