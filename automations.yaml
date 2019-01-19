@@ -232,47 +232,74 @@
         title: "灯球已经自动关闭"
         message: ""
 
-#- alias: toggle_led_ball
-#  trigger:
-#    platform: event
-#    event_type: click
-#    event_data:
-#      entity_id: binary_sensor.switch_158d0002108f19
-#      click_type: single
-#  action:
-#    service: light.toggle
-#    entity_id: light.xiaomi_philips_smart_led_ball
-#
-#- alias: ready_sleep
-#  trigger:
-#    platform: event
-#    event_type: long_click_press
-#    event_data:
-#      entity_id: binary_sensor.switch_158d0002108f19
-#      click_type: single
-#  action:
-#    service: script.light_night_sleep
+- alias: 'button_toggle_light_ball'
+  trigger:
+    platform: event
+    event_type: xiaomi_aqara.click
+    event_data:
+      entity_id: binary_sensor.switch_158d0002108f19_2
+      click_type: single
+  action:
+    service: light.toggle
+    entity_id: light.xiaomi_philips_smart_led_ball
 
-#- alias: button_toggle_light_ball
-#  trigger:
-#    platform: event
-#    event_type: xiaomi_aqara.click
-#    event_data:
-#      entity_id: binary_sensor.switch_158d0001eb6251
-#      click_type: single
-#  action:
-#    - service: light.toggle
-#      entity_id: light.xiaomi_philips_smart_led_ball
-#
-#- alias: button_light_bridge_model
-#  trigger:
-#    platform: event
-#    event_type: xiaomi_aqara.click
-#    event_data:
-#      entity_id: binary_sensor.switch_158d0001eb6251
-#      click_type: double
-#  action:
-#    - service: script.light_bridge_model
+- alias: "button_light_bridge_model"
+  trigger:
+    platform: event
+    event_type: xiaomi_aqara.click
+    event_data:
+      entity_id: binary_sensor.switch_158d0002108f19_2
+      click_type: double
+  action:
+    - service: script.light_bridge_model
+
+- alias: aqara_toggle_lamp_light
+  trigger:
+    platform: event
+    event_type: xiaomi_aqara.click
+    event_data:
+      entity_id: binary_sensor.switch_158d0001eb6251
+      click_type: single
+  action:
+    - service: light.toggle
+      entity_id: light.philips_eyecare_smart_lamp_2_2
+    - condition: and
+      conditions:
+      - condition: state
+        entity_id: light.philips_eyecare_smart_lamp_2_2
+        state: 'off'
+    - service: light.turn_off
+      entity_id: light.philips_eyecare_smart_lamp_2_ambient_light_2
+
+- alias: apara_toggle_ambient_light
+  trigger:
+    platform: event
+    event_type: xiaomi_aqara.click
+    event_data:
+      entity_id: binary_sensor.switch_158d0001eb6251
+      click_type: double
+  action:
+    - service: light.toggle
+      entity_id: light.philips_eyecare_smart_lamp_2_ambient_light_2
+    - condition: and
+      conditions:
+      - condition: state
+        entity_id: light.philips_eyecare_smart_lamp_2_ambient_light_2
+        state: 'on'
+    - service: light.turn_on
+      entity_id: light.philips_eyecare_smart_lamp_2_2
+
+- alias: notify_lamp_night_status
+  trigger:
+    platform: state
+    entity_id: light.philips_eyecare_smart_lamp_2_2, light.philips_eyecare_smart_lamp_2_ambient_light_2
+  action:
+    - service: notify.h5
+      data_template:
+        title: 台灯
+        message: >
+          "主灯:{{states.light.philips_eyecare_smart_lamp_2_2.state}},副灯{{states.light.philips_eyecare_smart_lamp_2_ambient_light_2.state}}"
+
 #
 #- alias: button_light_warm_model
 #  trigger:
