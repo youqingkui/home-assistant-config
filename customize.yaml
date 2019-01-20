@@ -226,8 +226,8 @@ automation.eight_wake_up:
 automation.button_toggle_light_ball:
   friendly_name: "light:无线开关->开关灯"
 
-automation.button_light_bridge_model:
-  friendly_name: "light:无线开关双击->灯明亮"
+automation.button_toggle_light_scene_model:
+  friendly_name: "light:无线开关双击->灯场景切换"
 
 automation.aqara_toggle_lamp_light:
   friendly_name: "light:aqara开关->开关台灯"
