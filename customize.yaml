@@ -77,6 +77,7 @@ binary_sensor.door_window_sensor_158d0001e5d33d:
   homebridge_visible: True
 
 light.xiaomi_philips_smart_led_ball:
+  icon: mdi:ceiling-light
   friendly_name: 灯球
   homebridge_name: 灯球
   homebridge_visible: True
@@ -159,6 +160,14 @@ sensor.xiaomi_ap_aqi:
   icon: mdi:blur
 sensor.xiaomi_ap_humid:
   icon: mdi:water-percent
+
+light.philips_eyecare_smart_lamp_2_2:
+  friendly_name: 台灯-主灯
+  icon: mdi:desk-lamp
+
+light.philips_eyecare_smart_lamp_2_ambient_light_2:
+  friendly_name: 台灯-环境灯
+  icon: mdi:lightbulb-on-outline
 
 sensor.illumination_7811dcb2a03e:
   hidden: true
