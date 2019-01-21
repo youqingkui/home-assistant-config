@@ -35,7 +35,6 @@ sensor.temperature_158d000202867e:
   homebridge_name: 温度传感器2
   homebridge_visible: True
 
-
 sensor.pressure_158d0001f538b8:
   icon: mdi:airballoon
   friendly_name: 气压传感器
@@ -147,12 +146,15 @@ fan.xiaomi_air_purifier_2s:
   extra_badge:
     entity_id: sensor.xiaomi_ap_aqi
     extra_data_template: 滤芯已用${attributes.filter_hours_used}小时，剩余${attributes.filter_life_remaining}%
+
 switch.xiaomi_ap_buzzer:
   icon: mdi:volume-high
   friendly_name: 提示音
+
 switch.xiaomi_ap_led:
   icon: mdi:lightbulb
   friendly_name: LED
+
 switch.xiaomi_ap_child:
   icon: mdi:lock
   friendly_name: 儿童锁
