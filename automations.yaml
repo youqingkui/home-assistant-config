@@ -209,7 +209,7 @@
 
 - alias: leave_close_light
   trigger:
-    platform: time
+    platform: time_pattern
     minutes: '/10'
     seconds: 00
   condition:
@@ -243,7 +243,7 @@
     service: light.toggle
     entity_id: light.xiaomi_philips_smart_led_ball
 
-- alias: button_toggle_light_scene_model
+- alias: "button_light_bridge_model"
   trigger:
     platform: event
     event_type: xiaomi_aqara.click
@@ -324,7 +324,7 @@
 ### 空调
 - alias: auto_close_airconditioning
   trigger:
-    platform: time
+    platform: time_pattern
     minutes: '/10'
     seconds: 00
   condition:
@@ -375,7 +375,7 @@
 
 - alias: auto_close_air
   trigger:
-    platform: time
+    platform: time_pattern
     minutes: 30
     seconds: 00
   condition:
@@ -409,7 +409,7 @@
 - alias: xiaomi_ap_get_mode
   initial_state: true
   trigger:
-    platform: time
+    platform: time_pattern
     seconds: /5
   action:
     service: input_select.select_option
@@ -441,7 +441,7 @@
 #- alias: xiaomi_ap_get_led
 #  initial_state: true
 #  trigger:
-#    platform: time
+#    platform: time_pattern
 #    seconds: /5
 #  action:
 #    service: input_select.select_option
