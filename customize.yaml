@@ -166,10 +166,14 @@ sensor.xiaomi_ap_humid:
 light.philips_eyecare_smart_lamp_2_2:
   friendly_name: 台灯-主灯
   icon: mdi:desk-lamp
+  homebridge_name: 台灯-主灯
+  homebridge_visible: True
 
 light.philips_eyecare_smart_lamp_2_ambient_light_2:
   friendly_name: 台灯-环境灯
   icon: mdi:lightbulb-on-outline
+  homebridge_name: 台灯-环境灯
+  homebridge_visible: True
 
 sensor.illumination_7811dcb2a03e:
   hidden: true
