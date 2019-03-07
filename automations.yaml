@@ -76,7 +76,7 @@
 #- alias: connec_wifi_open_door
 #  trigger:
 #    platform: state
-#    entity_id: device_tracker.youqingkuinote9
+#    entity_id: device_tracker.youqingkui_note9
 #    from: 'not_home'
 #    to: 'home'
 #  action:
@@ -102,7 +102,7 @@
     to: 'on'
   condition:
     condition: state
-    entity_id: device_tracker.youqingkuinote9
+    entity_id: device_tracker.youqingkui_note9
     state: "not_home"
   action:
     - service: notify.h5
@@ -121,7 +121,7 @@
       after: '00:00:00'
       before: '07:00:00'
     - condition: state
-      entity_id: device_tracker.youqingkuinote9
+      entity_id: device_tracker.youqingkui_note9
       state: "not_home"
   action:
   - service: script.record_video
@@ -142,7 +142,7 @@
       after: '00:00:00'
       before: '07:00:00'
     - condition: state
-      entity_id: device_tracker.youqingkuinote9
+      entity_id: device_tracker.youqingkui_note9
       state: "not_home"
   action:
   - service: script.dafang_snapshot2
@@ -210,8 +210,8 @@
 - alias: leave_close_light
   trigger:
     platform: time_pattern
-    minutes: '/10'
-    seconds: 00
+    minutes: '/15'
+#    seconds: 00
   condition:
     condition: and
     conditions:
@@ -219,7 +219,7 @@
       entity_id: device_tracker.rendandeiphone
       state: 'not_home'
     - condition: state
-      entity_id: device_tracker.youqingkuinote9
+      entity_id: device_tracker.youqingkui_note9
       state: 'not_home'
     - condition: state
       entity_id: light.xiaomi_philips_smart_led_ball
@@ -334,7 +334,7 @@
       entity_id: device_tracker.rendandeiphone
       state: 'not_home'
     - condition: state
-      entity_id: device_tracker.youqingkuinote9
+      entity_id: device_tracker.youqingkui_note9
       state: 'not_home'
     - condition: state
       entity_id: binary_sensor.airconditioning
@@ -377,7 +377,7 @@
   trigger:
     platform: time_pattern
     minutes: 30
-    seconds: 00
+#    seconds: 00
   condition:
     condition: and
     conditions:
@@ -385,7 +385,7 @@
       entity_id: device_tracker.rendandeiphone
       state: 'not_home'
     - condition: state
-      entity_id: device_tracker.youqingkuinote9
+      entity_id: device_tracker.youqingkui_note9
       state: 'not_home'
     - condition: state
       entity_id: fan.xiaomi_air_purifier_2s
@@ -475,7 +475,7 @@
   # 3个手机中任意一台wifi连接,或者门打开
   trigger:
     - platform: state
-      entity_id: device_tracker.youqingkuinote9
+      entity_id: device_tracker.youqingkui_note9
       from: 'not_home'
       to: 'home'
     - platform: state
