@@ -1,5 +1,6 @@
 ### 普通通知
-- alias: temperature_alert
+- id: "1"
+  alias: 温度提醒
   trigger:
     platform: numeric_state
     entity_id: sensor.temperature_158d00020ef39b
@@ -14,7 +15,8 @@
         title: "温度提醒 {{ states.sensor.temperature_158d00020ef39b.state }}°C"
         message: ""
 
-- alias: humidity_alert
+- id : "12"
+  alias: 湿度提醒
   trigger:
     platform: numeric_state
     entity_id: sensor.humidity_158d00020ef39b
@@ -25,7 +27,8 @@
         title: "湿度提醒 {{ states.sensor.humidity_158d00020ef39b.state }}%"
         message: ""
 
-- alias: minio_notify
+- id: "13"
+  alias: "minio 触发通知"
   trigger:
     platform: mqtt
     topic: minio
@@ -42,7 +45,8 @@
 
 
 ### 门
-- alias: door_status
+- id: "21"
+  alias: "门:状态通知"
   trigger:
     platform: state
     entity_id: binary_sensor.door_window_sensor_158d0002025c4b
@@ -59,7 +63,8 @@
             {{now()}}
           {% endif %}
 
-- alias: remind_door
+- id: "22"
+  alias: "门:记得关"
   trigger:
     platform: state
     entity_id: binary_sensor.door_window_sensor_158d0002025c4b
@@ -73,17 +78,8 @@
         title: "记得关门哦 \n {{ now() }}"
         message: ""
 
-#- alias: connec_wifi_open_door
-#  trigger:
-#    platform: state
-#    entity_id: device_tracker.youqingkui_note9
-#    from: 'not_home'
-#    to: 'home'
-#  action:
-#    - service: script.open_door
-#    - service: script.open_door_push
-
-- alias: open_door_action
+- id: "23"
+  alias: "门:点击通知开门"
   trigger:
     platform: event
     event_type: html5_notification.clicked
@@ -94,7 +90,8 @@
 
 
 ### 安防
-- alias: notify_move
+- id: "31"
+  alias: "移动:通知"
   trigger:
     platform: state
     entity_id: binary_sensor.motion_sensor_158d0001f3d0bb
@@ -109,7 +106,8 @@
       data_template:
         title: "检测到移动 \n {{ now() }}"
 
-- alias: motion_detector
+- id: "32"
+  alias: "大方:移动提醒"
   trigger:
     platform: mqtt
     topic: myhome/dafang/motion
@@ -130,7 +128,8 @@
       title: "dafang移动 \n {{ now() }}"
       message: ""
 
-- alias: motion_detector_snapshot
+- id: "33"
+  alias: "大方:移动截图"
   trigger:
     platform: mqtt
     topic: myhome/dafang/motion
@@ -149,7 +148,8 @@
 
 
 ### WI-FI
-- alias: device_online_notify
+- id: "41"
+  alias: "WI-FI:设备状态通知"
   trigger:
     platform: event
     event_type: 'state_changed'
@@ -170,9 +170,62 @@
       data:
         tag: "{{trigger.event.data.entity_id}}-{{states(trigger.event.data.entity_id)}}-{{now().day}}-{{now().hour}}"
 
+- id: "42"
+  alias: "WI-Fi:note9连接通知开门"
+  trigger:
+    platform: state
+    entity_id: device_tracker.youqingkui_note9
+    from: 'not_home'
+    to: 'home'
+  action:
+    - service: script.open_door
+    - service: script.open_door_push
+
+- id: "43"
+  alias: "WI-FI:连接打开灯和净化器"
+  # 3个手机中任意一台wifi连接,或者门打开
+  trigger:
+    - platform: state
+      entity_id: device_tracker.youqingkui_note9
+      from: 'not_home'
+      to: 'home'
+    - platform: state
+      entity_id: device_tracker.youqingkui
+      from: 'not_home'
+      to: 'home'
+    - platform: state
+      entity_id: device_tracker.rendandeiphone
+      from: 'not_home'
+      to: 'home'
+    - platform: state
+      entity_id: binary_sensor.door_window_sensor_158d0002025c4b
+      from: 'off'
+      to: 'on'
+  # 如果时间是18:30 - 23:30，并且灯球是关闭
+  condition:
+    condition: and
+    conditions:
+    - condition: time
+      after: '18:30:00'
+      before: '23:00:00'
+    - condition: state
+      entity_id: light.xiaomi_philips_smart_led_ball
+      state: 'off'
+  action:
+    # 打开灯球明亮模式
+    - service: script.light_bridge_model
+    - condition: and
+      conditions:
+      - condition: state
+        entity_id: fan.xiaomi_air_purifier_2s
+        state: 'off'
+    # 打开空气净化器
+    - service: script.open_air_auto_model
+
 
 ### 灯
-- alias: auto_light_night
+- id: "51"
+  alias: "灯:23点睡觉暖光"
   trigger:
     platform: time
     at: '23:00:00'
@@ -185,7 +238,8 @@
   action:
     - service: script.light_warm_model
 
-- alias: sleep_close_light
+- id: "52"
+  alias: "灯:23:50关"
   trigger:
     platform: time
     at: '23:35:00'
@@ -193,7 +247,8 @@
   - service: light.turn_off
     entity_id: light.xiaomi_philips_smart_led_ball
 
-- alias: eight_wake_up
+- id: "53"
+  alias: "灯:07:50提醒起床"
   trigger:
     platform: time
     at: '07:50:00'
@@ -207,7 +262,8 @@
       entity_id: light.xiaomi_philips_smart_led_ball
       time_period: 5
 
-- alias: leave_close_light
+- id: "54"
+  alias: "灯:离家15分钟关"
   trigger:
     platform: time_pattern
     minutes: '/15'
@@ -232,7 +288,8 @@
         title: "灯球已经自动关闭"
         message: ""
 
-- alias: 'button_toggle_light_ball'
+- id: "55"
+  alias: '灯:米家开关单击开关'
   trigger:
     platform: event
     event_type: xiaomi_aqara.click
@@ -243,7 +300,8 @@
     service: light.toggle
     entity_id: light.xiaomi_philips_smart_led_ball
 
-- alias: "button_light_bridge_model"
+- id: "56"
+  alias: "灯:米家开关双击切换光模式"
   trigger:
     platform: event
     event_type: xiaomi_aqara.click
@@ -262,7 +320,8 @@
           script.light_bridge_model
         {% endif%}
 
-- alias: aqara_toggle_lamp_light
+- id: "57"
+  alias: "台灯:aqara开关单击切换"
   trigger:
     platform: event
     event_type: xiaomi_aqara.click
@@ -280,7 +339,8 @@
     - service: light.turn_off
       entity_id: light.philips_eyecare_smart_lamp_2_ambient_light_2
 
-- alias: apara_toggle_ambient_light
+- id: "58"
+  alias: "台灯:aqara开关双击主灯与环境灯切换"
   trigger:
     platform: event
     event_type: xiaomi_aqara.click
@@ -298,7 +358,8 @@
     - service: light.turn_on
       entity_id: light.philips_eyecare_smart_lamp_2_2
 
-- alias: notify_lamp_night_status
+- id: "59"
+  alias: "台灯:状态通知"
   trigger:
     platform: state
     entity_id: light.philips_eyecare_smart_lamp_2_2, light.philips_eyecare_smart_lamp_2_ambient_light_2
@@ -309,20 +370,10 @@
         message: >
           "主灯:{{states.light.philips_eyecare_smart_lamp_2_2.state}},副灯{{states.light.philips_eyecare_smart_lamp_2_ambient_light_2.state}}"
 
-#
-#- alias: button_light_warm_model
-#  trigger:
-#    platform: event
-#    event_type: xiaomi_aqara.click
-#    event_data:
-#      entity_id: binary_sensor.switch_158d0001eb6251
-#      click_type: double
-#  action:
-#    - service: script.light_warm_model
-
 
 ### 空调
-- alias: auto_close_airconditioning
+- id: "61"
+  alias: "空调:离家10分钟关"
   trigger:
     platform: time_pattern
     minutes: '/10'
@@ -342,7 +393,8 @@
   action:
     - service: script.close_airconditioning
 
-- alias: air_status_change
+- id: "62"
+  alias: "空调:状态提醒"
   trigger:
     platform: state
     entity_id: sensor.air_test
@@ -351,7 +403,8 @@
 
 
 ### 空气净化器
-- alias: auto_open_air
+- id: "71"
+  alias: "空净:18点开"
   trigger:
     platform: time
     at: '18:00:00'
@@ -362,7 +415,8 @@
   action:
     - service: script.open_air_auto_model
 
-- alias: auto_sleep_model_air
+- id: "72"
+  alias: "空净:23:30睡眠模式"
   trigger:
     platform: time
     at: '23:30:00'
@@ -373,7 +427,8 @@
   action:
    - service: script.air_silent_model
 
-- alias: auto_close_air
+- id: "73"
+  alias: "空净:离家30分钟关"
   trigger:
     platform: time_pattern
     minutes: 30
@@ -394,7 +449,8 @@
     - service: fan.turn_off
       entity_id: fan.xiaomi_air_purifier_2s
 
-- alias: air_quality_alert
+- id: "74"
+  alias: "空净:空气质量提醒"
   trigger:
     platform: numeric_state
     entity_id: fan.xiaomi_air_purifier_2s
@@ -406,7 +462,8 @@
   action:
     - service: script.now_air_quality
 
-- alias: xiaomi_ap_get_mode
+- id: "75"
+  alias: "空净:模式状态"
   initial_state: true
   trigger:
     platform: time_pattern
@@ -422,7 +479,8 @@
         {% elif states.fan.xiaomi_air_purifier_2s.attributes.mode == "idle" %}待机
         {% endif %}
 
-- alias: xiaomi_ap_set_mode
+- id: "76"
+  alias: "空净:设置模式"
   initial_state: true
   trigger:
     platform: state
@@ -467,49 +525,6 @@
 #        {% elif states.input_select.xiaomi_ap_led.state == "微光" %}1
 #        {% elif states.input_select.xiaomi_ap_led.state == "关闭" %}2
 #        {% endif %}
-
-
-
-# 综合自动化
-- alias: back_home_open_air
-  # 3个手机中任意一台wifi连接,或者门打开
-  trigger:
-    - platform: state
-      entity_id: device_tracker.youqingkui_note9
-      from: 'not_home'
-      to: 'home'
-    - platform: state
-      entity_id: device_tracker.youqingkui
-      from: 'not_home'
-      to: 'home'
-    - platform: state
-      entity_id: device_tracker.rendandeiphone
-      from: 'not_home'
-      to: 'home'
-    - platform: state
-      entity_id: binary_sensor.door_window_sensor_158d0002025c4b
-      from: 'off'
-      to: 'on'
-  # 如果时间是18:30 - 23:30，并且灯球是关闭
-  condition:
-    condition: and
-    conditions:
-    - condition: time
-      after: '18:30:00'
-      before: '23:00:00'
-    - condition: state
-      entity_id: light.xiaomi_philips_smart_led_ball
-      state: 'off'
-  action:
-    # 打开灯球明亮模式
-    - service: script.light_bridge_model
-    - condition: and
-      conditions:
-      - condition: state
-        entity_id: fan.xiaomi_air_purifier_2s
-        state: 'off'
-    # 打开空气净化器
-    - service: script.open_air_auto_model
 
 
 
