@@ -105,6 +105,7 @@
     - service: notify.h5
       data_template:
         title: "检测到移动 \n {{ now() }}"
+        message: ""
 
 - id: "32"
   alias: "大方:移动提醒"
