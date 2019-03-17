@@ -23,6 +23,7 @@ homeassistant:
 # Enables the frontend
 frontend:
 
+system_health:
 
 
 # Enables configuration UI
@@ -316,6 +317,8 @@ shell_command:
   close_airconditioning: "/home/pi/homeassistant/bin/python /home/pi/.homeassistant/custom_components/airconditioningcompanion.py off"
   open_airconditioning: "/home/pi/homeassistant/bin/python /home/pi/.homeassistant/custom_components/airconditioningcompanion.py on"
   open_door: "bash /home/pi/.homeassistant/custom_components/open_door.sh"
+  restart_homeassistant: "sudo supervisorctl restart homeassistant"
+  s3_snapshot: 'bash /home/pi/.homeassistant/dafang_hack/s3_upload.sh {{states.input_text.text1.state}} >> /tmp/debug.log'
 
 binary_sensor:
   - platform: command_line
@@ -357,12 +360,30 @@ tts:
     region_name: ap-northeast-2
     voice: Zhiyu
 
+homekit:
+  auto_start: false
+  port: 51828
+  filter:
+    include_domains:
+      - light
+      - media_player
+      - binary_sensor
+      - cover
+      - device_tracker
+      - fan
+      - sensor
+      - switch
+
 logger:
   default: info
   logs:
     homeassistant.core: debug
     homeassistant.components.mqtt: debug
     homeassistant.components.xiaomi_aqara: debug
+    homeassistant.components.smartthings: debug
+    homeassistant.components.shell_command: debug
+    homeassistant.components.homekit: debug
+    pyhap: debug
 #    hbmqtt.broker: info
 #    hbmqtt.mqtt.protocol.handler: error
 #    transitions.core: warn
@@ -398,9 +419,9 @@ script: !include scripts.yaml
 #    aws_secret_access_key: !secret aws_secret_access_key
 #    region_name: 'ap-northeast-2'
 #
-#calendar:
-#  - platform: todoist
-#    token: !secret todoist_token
+calendar:
+  - platform: todoist
+    token: !secret todoist_token
 #    custom_projects:
 #      - name: 'Inbox'
 #      - name: 'Due Today'

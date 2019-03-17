@@ -330,14 +330,14 @@
       click_type: single
   action:
     - service: light.toggle
-      entity_id: light.philips_eyecare_smart_lamp_2_2
+      entity_id: light.philips_eyecare_smart_lamp_2
     - condition: and
       conditions:
       - condition: state
-        entity_id: light.philips_eyecare_smart_lamp_2_2
+        entity_id: light.philips_eyecare_smart_lamp_2
         state: 'off'
     - service: light.turn_off
-      entity_id: light.philips_eyecare_smart_lamp_2_ambient_light_2
+      entity_id: light.philips_eyecare_smart_lamp_2_ambient_light
 
 - id: "58"
   alias: "台灯:aqara开关双击主灯与环境灯切换"
@@ -349,26 +349,26 @@
       click_type: double
   action:
     - service: light.toggle
-      entity_id: light.philips_eyecare_smart_lamp_2_ambient_light_2
+      entity_id: light.philips_eyecare_smart_lamp_2_ambient_light
     - condition: and
       conditions:
       - condition: state
-        entity_id: light.philips_eyecare_smart_lamp_2_ambient_light_2
+        entity_id: light.philips_eyecare_smart_lamp_2_ambient_light
         state: 'on'
     - service: light.turn_on
-      entity_id: light.philips_eyecare_smart_lamp_2_2
+      entity_id: light.philips_eyecare_smart_lamp_2
 
 - id: "59"
   alias: "台灯:状态通知"
   trigger:
     platform: state
-    entity_id: light.philips_eyecare_smart_lamp_2_2, light.philips_eyecare_smart_lamp_2_ambient_light_2
+    entity_id: light.philips_eyecare_smart_lamp_2, light.philips_eyecare_smart_lamp_2_ambient_light
   action:
     - service: notify.h5
       data_template:
         title: 台灯
         message: >
-          "主灯:{{states.light.philips_eyecare_smart_lamp_2_2.state}},副灯{{states.light.philips_eyecare_smart_lamp_2_ambient_light_2.state}}"
+          "主灯:{{states.light.philips_eyecare_smart_lamp_2.state}},副灯{{states.light.philips_eyecare_smart_lamp_2_ambient_light.state}}"
 
 
 ### 空调

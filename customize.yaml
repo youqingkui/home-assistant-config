@@ -47,13 +47,13 @@ light.gateway_light_7811dc64ea36:
   homebridge_visible: True
 
 switch.original_xiaomi_mi_smart_wifi_socket_usb:
-  friendly_name: 智能插座USB
-  homebridge_name: 智能插座USB
+  friendly_name: 插座USB
+  homebridge_name: 插座USB
   homebridge_visible: True
 
 switch.original_xiaomi_mi_smart_wifi_socket:
-  friendly_name: 智能插座
-  homebridge_name: 智能插座
+  friendly_name: 插座
+  homebridge_name: 插座
   homebridge_visible: True
 
 camera.ip_webcam:
@@ -154,25 +154,61 @@ switch.xiaomi_ap_buzzer:
 switch.xiaomi_ap_led:
   icon: mdi:lightbulb
   friendly_name: LED
+  homebridge_name: 空净LED
+  homebridge_visible: True
+
+sensor.xiaomi_ap_temp:
+  friendly_name: 温度
+  homebridge_name: 空净温度
+  homebridge_visible: True
+
 
 switch.xiaomi_ap_child:
   icon: mdi:lock
   friendly_name: 儿童锁
+  homebridge_name: 空净儿童锁
+  homebridge_visible: True
+
 sensor.xiaomi_ap_aqi:
   icon: mdi:blur
+  homebridge_name: 空气质量
+  homebridge_visible: True
+
 sensor.xiaomi_ap_humid:
   icon: mdi:water-percent
+  homebridge_name: 空净湿度
+  homebridge_visible: True
 
-light.philips_eyecare_smart_lamp_2_2:
+light.philips_eyecare_smart_lamp_2:
   friendly_name: 台灯-主灯
   icon: mdi:desk-lamp
   homebridge_name: 台灯-主灯
   homebridge_visible: True
 
-light.philips_eyecare_smart_lamp_2_ambient_light_2:
+light.philips_eyecare_smart_lamp_2_ambient_light:
   friendly_name: 台灯-环境灯
   icon: mdi:lightbulb-on-outline
   homebridge_name: 台灯-环境灯
+  homebridge_visible: True
+
+cover.dafang_move_leftright:
+  homebridge_name: 大方左右
+  homebridge_visible: True
+
+cover.dafang_move_updown:
+  homebridge_name: 大方上下
+  homebridge_visible: True
+
+switch.dafang_night_mode:
+  homebridge_name: 大方夜视
+  homebridge_visible: True
+
+binary_sensor.dafang_motion_sensor:
+  homebridge_name: 大方移动
+  homebridge_visible: True
+
+group.pistatus:
+  homebridge_name: PI 运行状态
   homebridge_visible: True
 
 sensor.illumination_7811dcb2a03e:
@@ -286,8 +322,8 @@ automation.auto_close_air:
   friendly_name: "air:离家30分钟->关"
 
 # 综合自动化
-automation.back_home_open_air:
-  friendly_name: "回家->灯开->净化器开"
+#automation.back_home_open_air:
+#  friendly_name: "回家->灯开->净化器开"
 
 #group.autolight:
 #  hidden: false

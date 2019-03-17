@@ -28,7 +28,11 @@ play_ringtone:
       gw_mac: 78:11:DC:B7:A5:77
       ringtone_id: 11
       ringtone_vol: 25
-      
+
+restart_homeassistant:
+  alias: 重启HA
+  sequence:
+  - service: shell_command.restart_homeassistant
 
 ##### 大方
 #dafang_snapshot:
@@ -85,6 +89,11 @@ record_video:
   alias: dafang:15s视频记录
   sequence:
   - service: shell_command.record_video
+
+s3_snapshot:
+  alias: dafang:上传截图S3
+  sequence:
+  - service: shell_command.s3_snapshot
 
 
 #### 灯

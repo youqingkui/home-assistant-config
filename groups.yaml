@@ -95,8 +95,8 @@ xiaomi_air_purifier:
     - sensor.xiaomi_ap_aqi
     - sensor.xiaomi_ap_temp
     - sensor.xiaomi_ap_humid
-    - sensor.xiaomi_ap_filter_used
-    - sensor.xiaomi_ap_filter_life
+#    - sensor.xiaomi_ap_filter_used
+#    - sensor.xiaomi_ap_filter_life
     - input_select.xiaomi_ap_mode
 
 
