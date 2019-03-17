@@ -77,6 +77,23 @@ reboot_dafang:
       topic: myhome/dafang/system/reboot
       payload: "ON"
 
+reboot_dafang_video:
+  alias: dafang:重启视频
+  sequence:
+  - service: mqtt.publish
+    data:
+      topic: myhome/dafang/rtsp_h264_server/set
+      payload: "OFF"
+  - delay: '00:00:10'
+  - service: mqtt.publish
+    data:
+      topic: myhome/dafang/rtsp_h264_server/set
+      payload: "ON"
+  - service: notify.h5
+    data:
+      title: "dafang 重启视频"
+      message: ""
+
 reboot_autodiscovery:
   alias: dafang:autodiscovery
   sequence:
