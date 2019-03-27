@@ -145,7 +145,7 @@ fan.xiaomi_air_purifier_2s:
   friendly_name: 空净开关
   extra_badge:
     entity_id: sensor.xiaomi_ap_aqi
-    extra_data_template: 滤芯已用${attributes.filter_hours_used}小时，剩余${attributes.filter_life_remaining}%
+    extra_data_template: 滤芯已用{attributes.filter_hours_used}小时，剩余{attributes.filter_life_remaining}%
 
 switch.xiaomi_ap_buzzer:
   icon: mdi:volume-high
@@ -178,6 +178,14 @@ sensor.xiaomi_ap_humid:
   icon: mdi:water-percent
   homebridge_name: 空净湿度
   homebridge_visible: True
+
+sensors.xiaomi_ap_filter_used:
+  icon: mdi:timer-sand
+  friendly_name: 运行总时
+
+sensors.xiaomi_ap_filter_life:
+  icon: mdi:battery
+  friendly_name: 剩余
 
 light.philips_eyecare_smart_lamp_2:
   friendly_name: 台灯-主灯

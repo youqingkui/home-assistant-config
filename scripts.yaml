@@ -80,6 +80,9 @@ reboot_dafang:
 reboot_dafang_video:
   alias: dafang:重启视频
   sequence:
+  - condition: state
+    entity_id: 'script.reboot_dafang_video'
+    state: 'off'
   - service: mqtt.publish
     data:
       topic: myhome/dafang/rtsp_h264_server/set
@@ -101,11 +104,17 @@ reboot_autodiscovery:
     data:
       topic: myhome/dafang/system/autodiscovery
       payload: "ON"
+  - delay: '00:00:10'
+  - service: mqtt.publish
+    data:
+      topic: myhome/dafang/system/status-interval
+      payload: "ON"
 
 record_video:
   alias: dafang:15s视频记录
   sequence:
   - service: shell_command.record_video
+  - delay: '00:00:05'
 
 s3_snapshot:
   alias: dafang:上传截图S3

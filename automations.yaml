@@ -147,6 +147,14 @@
   action:
   - service: script.dafang_snapshot2
 
+- id: "34"
+  alias: '大方:autodiscovery'
+  trigger:
+    - platform: homeassistant
+      event: start
+  action:
+    - service: script.reboot_autodiscovery
+
 
 ### WI-FI
 - id: "41"
@@ -179,7 +187,6 @@
     from: 'not_home'
     to: 'home'
   action:
-    - service: script.open_door
     - service: script.open_door_push
 
 - id: "43"

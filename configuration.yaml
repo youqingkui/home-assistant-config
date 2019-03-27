@@ -135,6 +135,14 @@ sensor:
         friendly_name: 湿度
         value_template: "{{ states.fan.xiaomi_air_purifier_2s.attributes.humidity }}"
         unit_of_measurement: "%"
+      xiaomi_ap_filter_used:
+        friendly_name: 运行总时
+        value_template: "{{ states.fan.xiaomi_air_purifier_2s.attributes.filter_hours_used }}"
+        unit_of_measurement: "H"
+      xiaomi_ap_filter_life:
+        friendly_name: 剩余
+        value_template: "{{ states.fan.xiaomi_air_purifier_2s.attributes.filter_life_remaining }}"
+        unit_of_measurement: "%"
 #  - platform: imap
 #    server: imap.gmail.com
 #    port: 993
@@ -373,6 +381,25 @@ homekit:
       - fan
       - sensor
       - switch
+#  entity_config:
+#    cover.dafang_move_left_right:
+#      feature_list:
+#        - feature: set_cover_position
+#    cover.dafang_move_up_down:
+#      feature_list:
+#        - feature: set_cover_position
+lock:
+  - platform: template
+    name: Garage door
+    value_template: "{{ is_state('binary_sensor.door_window_sensor_158d0002025c4b', 'off') }}"
+    lock:
+      service: switch.turn_on
+      data:
+        entity_id: switch.door
+    unlock:
+      service: switch.turn_off
+      data:
+        entity_id: switch.door
 
 logger:
   default: info
