@@ -234,68 +234,71 @@ device_tracker.0071470ef050:
 device_tracker.00bb3a3b3148:
   not_notify: yes
 
+switch.plug_158d00032d6027:
+  friendly_name: 插座开关
+
 # 自动化命名
 # 通知
-automation.temperature_alert:
-  friendly_name: "温度过高提醒"
-
-automation.humidity_alert:
-  friendly_name: "湿度过高提醒"
-
-automation.minio_notify:
-  friendly_name: "minio 访问通知"
-
-# 门
-automation.door_status:
-  friendly_name: "door:开关门通知"
-
-automation.remind_door:
-  friendly_name: "door:关门提醒"
-
-automation.connec_wifi_open_door:
-  friendly_name: "door:连接Wi-Fi自动开门"
-
-automation.open_door_action:
-  friendly_name: "door:点击通知开门"
-
-# 安防
-automation.notify_move:
-  friendly_name: "移动->提醒"
-
-automation.motion_detector:
-  friendly_name: "移动->记录视频"
-
-automation.motion_detector_snapshot:
-  friendly_name: "移动->截图"
-
-# Wi-Fi
-automation.device_online_notify:
-  friendly_name: "WiFi:连接提醒"
-
-# 灯
-automation.auto_light_night:
-  friendly_name: "light:23点->灯球温馨模式"
-
-automation.sleep_close_light:
-  friendly_name: "light:23:35->关"
-
-automation.eight_wake_up:
-  friendly_name: "light:8点->开"
-
-automation.button_toggle_light_ball:
-  friendly_name: "light:无线开关->开关灯"
-
-automation.button_toggle_light_scene_model:
-  friendly_name: "light:无线开关双击->灯场景切换"
-
-automation.aqara_toggle_lamp_light:
-  friendly_name: "light:aqara开关->开关台灯"
-
-automation.apara_toggle_ambient_light:
-  friendly_name: "light:aqara开关双击->开关副台灯"
-
-automation.notify_lamp_night_status:
-  friendly_name: "light:台灯状态通知"
+#automation.temperature_alert:
+#  friendly_name: "温度过高提醒"
+#
+#automation.humidity_alert:
+#  friendly_name: "湿度过高提醒"
+#
+#automation.minio_notify:
+#  friendly_name: "minio 访问通知"
+#
+## 门
+#automation.door_status:
+#  friendly_name: "door:开关门通知"
+#
+#automation.remind_door:
+#  friendly_name: "door:关门提醒"
+#
+#automation.connec_wifi_open_door:
+#  friendly_name: "door:连接Wi-Fi自动开门"
+#
+#automation.open_door_action:
+#  friendly_name: "door:点击通知开门"
+#
+## 安防
+#automation.notify_move:
+#  friendly_name: "移动->提醒"
+#
+#automation.motion_detector:
+#  friendly_name: "移动->记录视频"
+#
+#automation.motion_detector_snapshot:
+#  friendly_name: "移动->截图"
+#
+## Wi-Fi
+#automation.device_online_notify:
+#  friendly_name: "WiFi:连接提醒"
+#
+## 灯
+#automation.auto_light_night:
+#  friendly_name: "light:23点->灯球温馨模式"
+#
+#automation.sleep_close_light:
+#  friendly_name: "light:23:35->关"
+#
+#automation.eight_wake_up:
+#  friendly_name: "light:8点->开"
+#
+#automation.button_toggle_light_ball:
+#  friendly_name: "light:无线开关->开关灯"
+#
+#automation.button_toggle_light_scene_model:
+#  friendly_name: "light:无线开关双击->灯场景切换"
+#
+#automation.aqara_toggle_lamp_light:
+#  friendly_name: "light:aqara开关->开关台灯"
+#
+#automation.apara_toggle_ambient_light:
+#  friendly_name: "light:aqara开关双击->开关副台灯"
+#
+#automation.notify_lamp_night_status:
+#  friendly_name: "light:台灯状态通知"
 
 #automation.toggle_led_ball:
 #  friendly_name: "light:无线开关控制"
@@ -303,31 +306,31 @@ automation.notify_lamp_night_status:
 #automation.ready_sleep:
 #  friendly_name: "light:无线开关1长按->灯球温馨"
 #
-automation.leave_close_light:
-  friendly_name: "light:离家10分钟->灯球关"
+#automation.leave_close_light:
+#  friendly_name: "light:离家10分钟->灯球关"
 #
 #automation.button_light_warm_model:
 #  friendly_name: "light:无线开关双击->温馨"
 
 # 空调
-automation.auto_close_airconditioning:
-  friendly_name: "air_conditioning:离家10分钟->关"
-
-automation.air_status_change:
-  friendly_name: "air_conditioning:状态变化通知"
+#automation.auto_close_airconditioning:
+#  friendly_name: "air_conditioning:离家10分钟->关"
+#
+#automation.air_status_change:
+#  friendly_name: "air_conditioning:状态变化通知"
 
 # 空气净化器
-automation.auto_open_air:
-  friendly_name: "air:18点->开"
-
-automation.auto_sleep_model_air:
-  friendly_name: "air:23:30->睡眠模式"
-
-automation.air_quality_alert:
-  friendly_name: "air:空气质量提醒"
-
-automation.auto_close_air:
-  friendly_name: "air:离家30分钟->关"
+#automation.auto_open_air:
+#  friendly_name: "air:18点->开"
+#
+#automation.auto_sleep_model_air:
+#  friendly_name: "air:23:30->睡眠模式"
+#
+#automation.air_quality_alert:
+#  friendly_name: "air:空气质量提醒"
+#
+#automation.auto_close_air:
+#  friendly_name: "air:离家30分钟->关"
 
 # 综合自动化
 #automation.back_home_open_air:

@@ -251,6 +251,89 @@ open_door:
       title: "门"
       message: "执行开门"
 
+get_todo_task:
+  alias: "@home tasks"
+  sequence:
+    - condition: state
+      entity_id: 'calendar.at_home'
+      state: 'on'
+    - service: notify.h5
+      data_template:
+        title: "home tasks"
+        message: >
+          {% for content in state_attr('calendar.at_home', 'all_tasks') -%}
+              {{loop.index}}.{{ content }}，
+          {%- endfor %}
+
+five_minue_close_light:
+  alias: "灯:5分钟后关"
+  sequence:
+    - delay: '00:05:00'
+    - service: light.turn_off
+      data:
+        entity_id : group.all_lights
+
+dafang_left_motor:
+  alias: "大方:左"
+  sequence:
+    - service: mqtt.publish
+      data:
+        topic: myhome/dafang/motors/horizontal/set
+        payload: "left"
+    - delay: '00:00:01'
+
+dafang_right_motor:
+  alias: "大方:右"
+  sequence:
+    - service: mqtt.publish
+      data:
+        topic: myhome/dafang/motors/horizontal/set
+        payload: "right"
+    - delay: '00:00:01'
+
+dafang_up_motor:
+  alias: "大方:上"
+  sequence:
+    - service: mqtt.publish
+      data:
+        topic: myhome/dafang/motors/vertical/set
+        payload: "up"
+    - delay: '00:00:01'
+
+dafang_down_motor:
+  alias: "大方:下"
+  sequence:
+    - service: mqtt.publish
+      data:
+        topic: myhome/dafang/motors/vertical/set
+        payload: "down"
+    - delay: '00:00:01'
+
+restart_homebridge:
+  alias: 重启homebridge
+  sequence:
+  - service: shell_command.restart_homebridge
+  - delay: '00:00:05'
+
+#ten_minue_close_light:
+#  alias: "灯:10分钟后关"
+#  sequence:
+#    - delay: '00:10:00'
+#    - service: light.turn_off
+#      data:
+#        - entity_id: light.philips_eyecare_smart_lamp_2
+#        - entity_id: light.philips_eyecare_smart_lamp_2_ambient_light
+#        - entity_id: light.xiaomi_philips_smart_led_ball
+#
+#fivety_minue_close_light:
+#  alias: "灯:15分钟后关"
+#  sequence:
+#    - delay: '00:15:00'
+#    - service: light.turn_off
+#      data:
+#        - entity_id : light.philips_eyecare_smart_lamp_2
+#        - entity_id : light.philips_eyecare_smart_lamp_2_ambient_light
+#        - entity_id : light.xiaomi_philips_smart_led_ball
 
 
       #dafang_move_left:

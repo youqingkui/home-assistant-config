@@ -143,11 +143,22 @@ sensor:
         friendly_name: 剩余
         value_template: "{{ states.fan.xiaomi_air_purifier_2s.attributes.filter_life_remaining }}"
         unit_of_measurement: "%"
-#  - platform: imap
-#    server: imap.gmail.com
-#    port: 993
-#    username: !secret gmail_name
-#    password: !secret gmail_one_passwd
+  - platform: imap_email_content
+    server: imap.gmail.com
+    port: 993
+    username: !secret gmail_name
+    password: !secret gmail_one_passwd
+    senders:
+      - youqingkui@qq.com
+      - noreply_18@lanu.cn
+    value_template: >-
+      {% if 'test' in subject %}
+        power_on
+      {% elif '12306' in subject %}
+        call_me_{{now().hour}}_{{now().minute}}_{{now().second}}
+      {% else %}
+        ""
+      {% endif %}
 #  - platform: mqtt
 #    state_topic: 'office/sensor1'
 #    name: 'Temperature'
@@ -281,6 +292,7 @@ switch:
 #    host: chuangmi-plug-v1_miio11440510
     token: !secret xiaomi_wifi_socket
 
+stream:
 
 camera:
 #  - platform: ffmpeg
@@ -293,12 +305,13 @@ camera:
     password: ismart12
     authentication: basic
     still_image_url: https://192.168.31.187/cgi-bin/currentpic.cgi
+#    stream_source: rtsp://192.168.31.187:8554/unicast
     verify_ssl: false
     scan_interval: 5
 #  - platform: ffmpeg
 #    name: XiaoFang
 #    input: -rtsp_transport tcp -i rtsp://192.168.31.187:8554/unicast
-#    extra_arguments: -pred 1 -q:v 2
+#    extra_arguments: -pred 1 -q:v 2 -vcodec h264_omx
 
 
 #mqtt:
@@ -326,6 +339,7 @@ shell_command:
   open_airconditioning: "/home/pi/homeassistant/bin/python /home/pi/.homeassistant/custom_components/airconditioningcompanion.py on"
   open_door: "bash /home/pi/.homeassistant/custom_components/open_door.sh"
   restart_homeassistant: "sudo supervisorctl restart homeassistant"
+  restart_homebridge: "sudo service homebridge restart"
   s3_snapshot: 'bash /home/pi/.homeassistant/dafang_hack/s3_upload.sh {{states.input_text.text1.state}} >> /tmp/debug.log'
 
 binary_sensor:
@@ -377,10 +391,18 @@ homekit:
       - media_player
       - binary_sensor
       - cover
-      - device_tracker
       - fan
       - sensor
       - switch
+    include_entities:
+      - script.open_door_push
+      - script.dafang_left_motor
+      - script.dafang_right_motor
+      - script.dafang_up_motor
+      - script.dafang_down_motor
+      - script.reboot_autodiscovery
+      - script.restart_homebridge
+      - script.open_door
 #  entity_config:
 #    cover.dafang_move_left_right:
 #      feature_list:
@@ -410,6 +432,7 @@ logger:
     homeassistant.components.smartthings: debug
     homeassistant.components.shell_command: debug
     homeassistant.components.homekit: debug
+    homeassistant.components.camera: debug
     pyhap: debug
 #    hbmqtt.broker: info
 #    hbmqtt.mqtt.protocol.handler: error
@@ -449,12 +472,10 @@ script: !include scripts.yaml
 calendar:
   - platform: todoist
     token: !secret todoist_token
-#    custom_projects:
-#      - name: 'Inbox'
-#      - name: 'Due Today'
-#        due_date_days: 0
-#      - name: 'Due This Week'
-#        due_date_days: 7
+    custom_projects:
+      - name: 'At Home'
+        labels:
+          - home
 
 # calendar:
 #   - platform: caldav

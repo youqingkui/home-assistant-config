@@ -504,6 +504,40 @@
         {% elif states.input_select.xiaomi_ap_mode.state == "待机" %}Idle
         {% endif %}
 
+- id: "80"
+  alias: "email:电话通知"
+  trigger:
+    platform: state
+    entity_id: sensor.hyouqingkui_gmail_com
+  condition:
+    - condition: template
+      value_template: '{{ trigger.from_state.state != trigger.to_state.state }}'
+  action:
+    - service: ifttt.trigger
+      data:
+        event: phone_call
+    - service: notify.h5
+      data_template:
+        title: "Email"
+        message: "{{ states('sensor.hyouqingkui_gmail_com') }}"
+
+- id: "81"
+  alias: 'Start HomeKit'
+  trigger:
+    - platform: homeassistant
+      event: start
+  action:
+    - delay: 01:00  # Waits 5 minutes
+    - service: homekit.start
+    - service: notify.h5
+      data:
+        title: "HomeKit"
+        message: "start"
+    - service: automation.turn_off
+      data:
+        entity_id: "automation.kong_jing_mo_shi_zhuang_tai"
+
+
 #- alias: xiaomi_ap_get_led
 #  initial_state: true
 #  trigger:

@@ -37,6 +37,7 @@ LivingRoom:
     - sensor.air_test
     - binary_sensor.switch_158d0001eb6251
     - binary_sensor.switch_158d0002108f19_2
+    - switch.plug_158d00032d6027
 
 Dafang3:
   entities:
