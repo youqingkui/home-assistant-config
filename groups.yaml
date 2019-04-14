@@ -38,6 +38,7 @@ LivingRoom:
     - binary_sensor.switch_158d0001eb6251
     - binary_sensor.switch_158d0002108f19_2
     - switch.plug_158d00032d6027
+    - sensor.xiaomi_zigbee_switch_load_power
 
 Dafang3:
   entities:

@@ -143,6 +143,11 @@ sensor:
         friendly_name: 剩余
         value_template: "{{ states.fan.xiaomi_air_purifier_2s.attributes.filter_life_remaining }}"
         unit_of_measurement: "%"
+      xiaomi_zigbee_switch_load_power:
+        friendly_name: 功率
+        value_template: "{{ states.switch.plug_158d00032d6027.attributes.load_power }}"
+        unit_of_measurement: "W"
+
   - platform: imap_email_content
     server: imap.gmail.com
     port: 993
