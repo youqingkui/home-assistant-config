@@ -243,7 +243,7 @@ open_door_push:
             title: 开门
 
 open_door:
-  alias: "门:执行开门"
+  alias: "大门"
   sequence:
   - service: shell_command.open_door
   - service: notify.h5
@@ -314,6 +314,16 @@ restart_homebridge:
   sequence:
   - service: shell_command.restart_homebridge
   - delay: '00:00:05'
+
+restart_frp:
+  alias: 重启frp
+  sequence:
+    - service: shell_command.restart_frp
+    - service: notify.h5
+      data:
+        title: "重启frp"
+        message: ""
+    - delay: '00:00:05'
 
 #ten_minue_close_light:
 #  alias: "灯:10分钟后关"

@@ -47,12 +47,12 @@ light.gateway_light_7811dc64ea36:
   homebridge_visible: True
 
 switch.original_xiaomi_mi_smart_wifi_socket_usb:
-  friendly_name: 插座USB
+  friendly_name: 大方
   homebridge_name: 插座USB
   homebridge_visible: True
 
 switch.original_xiaomi_mi_smart_wifi_socket:
-  friendly_name: 插座
+  friendly_name: 树莓派
   homebridge_name: 插座
   homebridge_visible: True
 
@@ -171,12 +171,14 @@ switch.xiaomi_ap_child:
 
 sensor.xiaomi_ap_aqi:
   icon: mdi:blur
+  device_class: pm25
   homebridge_name: 空气质量
   homebridge_visible: True
 
-sensor.xiaomi_ap_humid:
+sensor.humidity_xiaomi_ap:
   icon: mdi:water-percent
   homebridge_name: 空净湿度
+  device_class: humidity
   homebridge_visible: True
 
 sensors.xiaomi_ap_filter_used:
@@ -188,13 +190,13 @@ sensors.xiaomi_ap_filter_life:
   friendly_name: 剩余
 
 light.philips_eyecare_smart_lamp_2:
-  friendly_name: 台灯-主灯
+  friendly_name: 台灯
   icon: mdi:desk-lamp
   homebridge_name: 台灯-主灯
   homebridge_visible: True
 
 light.philips_eyecare_smart_lamp_2_ambient_light:
-  friendly_name: 台灯-环境灯
+  friendly_name: 环境灯
   icon: mdi:lightbulb-on-outline
   homebridge_name: 台灯-环境灯
   homebridge_visible: True
@@ -219,12 +221,6 @@ group.pistatus:
   homebridge_name: PI 运行状态
   homebridge_visible: True
 
-sensor.illumination_7811dcb2a03e:
-  hidden: true
-
-binary_sensor.airconditioning:
-  hidden: true
-
 device_tracker.a438cccafb57:
   not_notify: yes
 
@@ -235,7 +231,13 @@ device_tracker.00bb3a3b3148:
   not_notify: yes
 
 switch.plug_158d00032d6027:
-  friendly_name: 插座开关
+  friendly_name: 小插座
+
+#sensor.illumination_7811dcb2a03e:
+#  hidden: true
+#
+#binary_sensor.airconditioning:
+#  hidden: true
 
 # 自动化命名
 # 通知

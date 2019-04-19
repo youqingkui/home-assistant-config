@@ -131,7 +131,7 @@ sensor:
         friendly_name: 温度
         value_template: "{{ states.fan.xiaomi_air_purifier_2s.attributes.temperature }}"
         unit_of_measurement: °C
-      xiaomi_ap_humid:
+      humidity_xiaomi_ap:
         friendly_name: 湿度
         value_template: "{{ states.fan.xiaomi_air_purifier_2s.attributes.humidity }}"
         unit_of_measurement: "%"
@@ -345,6 +345,7 @@ shell_command:
   open_door: "bash /home/pi/.homeassistant/custom_components/open_door.sh"
   restart_homeassistant: "sudo supervisorctl restart homeassistant"
   restart_homebridge: "sudo service homebridge restart"
+  restart_frp: "sudo supervisorctl restart frp_arm"
   s3_snapshot: 'bash /home/pi/.homeassistant/dafang_hack/s3_upload.sh {{states.input_text.text1.state}} >> /tmp/debug.log'
 
 binary_sensor:
@@ -408,6 +409,9 @@ homekit:
       - script.reboot_autodiscovery
       - script.restart_homebridge
       - script.open_door
+      - script.restart_frp
+      - script.restart_homeassistant
+      - sensor.humidity_xiaomi_ap
 #  entity_config:
 #    cover.dafang_move_left_right:
 #      feature_list:

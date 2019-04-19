@@ -153,6 +153,7 @@
     - platform: homeassistant
       event: start
   action:
+    - delay: 00:01
     - service: script.reboot_autodiscovery
 
 
@@ -527,7 +528,7 @@
     - platform: homeassistant
       event: start
   action:
-    - delay: 01:00  # Waits 5 minutes
+    - delay: 00:02  # Waits 5 minutes
     - service: homekit.start
     - service: notify.h5
       data:
