@@ -161,8 +161,6 @@ sensor:
         power_on
       {% elif '12306' in subject %}
         call_me_{{now().hour}}_{{now().minute}}_{{now().second}}
-      {% else %}
-        ""
       {% endif %}
 #  - platform: mqtt
 #    state_topic: 'office/sensor1'
@@ -412,6 +410,17 @@ homekit:
       - script.restart_frp
       - script.restart_homeassistant
       - sensor.humidity_xiaomi_ap
+  entity_config:
+    script.open_door:
+      name: 门
+    switch.dafang_h264_rtsp_server:
+      name: h264视频流
+    switch.dafang_mjpeg_rtsp_server:
+      name: mjpeg视频流
+    binary_sensor.dafang_motion_sensor:
+      name: 大方移动传感
+
+
 #  entity_config:
 #    cover.dafang_move_left_right:
 #      feature_list:

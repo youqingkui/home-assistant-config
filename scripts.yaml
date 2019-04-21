@@ -243,7 +243,7 @@ open_door_push:
             title: 开门
 
 open_door:
-  alias: "大门"
+  alias: "门:打开"
   sequence:
   - service: shell_command.open_door
   - service: notify.h5

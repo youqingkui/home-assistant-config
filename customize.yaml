@@ -142,23 +142,23 @@ binary_sensor.switch_158d0002108f19_2:
   homebridge_visible: True
 
 fan.xiaomi_air_purifier_2s:
-  friendly_name: 空净开关
+  friendly_name: 空气净化器
   extra_badge:
     entity_id: sensor.xiaomi_ap_aqi
     extra_data_template: 滤芯已用{attributes.filter_hours_used}小时，剩余{attributes.filter_life_remaining}%
 
 switch.xiaomi_ap_buzzer:
   icon: mdi:volume-high
-  friendly_name: 提示音
+  friendly_name: 空净提示音
 
 switch.xiaomi_ap_led:
   icon: mdi:lightbulb
-  friendly_name: LED
+  friendly_name: 空净LED
   homebridge_name: 空净LED
   homebridge_visible: True
 
 sensor.xiaomi_ap_temp:
-  friendly_name: 温度
+  friendly_name: 空净温度
   homebridge_name: 空净温度
   homebridge_visible: True
 
@@ -183,22 +183,20 @@ sensor.humidity_xiaomi_ap:
 
 sensors.xiaomi_ap_filter_used:
   icon: mdi:timer-sand
-  friendly_name: 运行总时
+  friendly_name: 空净运行总时
 
 sensors.xiaomi_ap_filter_life:
   icon: mdi:battery
-  friendly_name: 剩余
+  friendly_name: 空净剩余
 
 light.philips_eyecare_smart_lamp_2:
   friendly_name: 台灯
   icon: mdi:desk-lamp
-  homebridge_name: 台灯-主灯
   homebridge_visible: True
 
 light.philips_eyecare_smart_lamp_2_ambient_light:
   friendly_name: 环境灯
   icon: mdi:lightbulb-on-outline
-  homebridge_name: 台灯-环境灯
   homebridge_visible: True
 
 cover.dafang_move_leftright:
@@ -231,7 +229,7 @@ device_tracker.00bb3a3b3148:
   not_notify: yes
 
 switch.plug_158d00032d6027:
-  friendly_name: 小插座
+  friendly_name: 插座
 
 #sensor.illumination_7811dcb2a03e:
 #  hidden: true

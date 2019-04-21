@@ -538,6 +538,48 @@
       data:
         entity_id: "automation.kong_jing_mo_shi_zhuang_tai"
 
+- id: "82"
+  alias: '光猫:重启'
+  trigger:
+    platform: time_pattern
+    hours: /2
+  action:
+    - service: notify.h5
+      data:
+        title: "光猫"
+        message: "重启"
+    - service: switch.turn_off
+      data:
+        entity_id: switch.plug_158d00032d6027
+    - delay: 00:01
+    - service: switch.turn_on
+      data:
+        entity_id: switch.plug_158d00032d6027
+
+- id: "83"
+  alias: "光猫:早上重启"
+  trigger:
+    platform: time
+    at: '05:45:00'
+  condition:
+    condition: and
+    conditions:
+    - condition: state
+      entity_id: automation.guang_mao_zhong_qi
+      state: 'on'
+  action:
+    - service: notify.h5
+      data:
+        title: "光猫"
+        message: "关闭"
+    - service: switch.turn_off
+      data:
+        entity_id: switch.plug_158d00032d6027
+    - delay: 00:01
+    - service: switch.turn_on
+      data:
+        entity_id: switch.plug_158d00032d6027
+
 
 #- alias: xiaomi_ap_get_led
 #  initial_state: true
