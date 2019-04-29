@@ -355,6 +355,7 @@ binary_sensor:
     payload_off: 0
   - platform: command_line
     name: frp_status
+    device_class: connectivity
     command: "bash /home/pi/.homeassistant/custom_components/frp_status.sh"
     payload_on: ok
     payload_off: not

@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-pid=`ps aux |grep frp | grep -v grep | awk '{print $2}'`
+pid=`ps aux |grep frpc | grep -v grep | awk '{print $2}'`
 if [ "$pid" ]; then
 	echo "ok"
 else
