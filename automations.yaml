@@ -561,12 +561,6 @@
   trigger:
     platform: time
     at: '05:45:00'
-  condition:
-    condition: and
-    conditions:
-    - condition: state
-      entity_id: automation.guang_mao_zhong_qi
-      state: 'on'
   action:
     - service: notify.h5
       data:
@@ -579,6 +573,22 @@
     - service: switch.turn_on
       data:
         entity_id: switch.plug_158d00032d6027
+
+- id: "84"
+  alias: "检查FRP"
+  trigger:
+    platform: time_pattern
+    minutes: /5
+  condition:
+    - condition: template
+      value_template: "{% if is_state('binary_sensor.frp_status', 'off') %} true {% else %} false {% endif %}"
+  action:
+    - service: notify.h5
+      data_template:
+        title: "frp 检查"
+        message: ""
+    - service: script.restart_frp
+
 
 
 #- alias: xiaomi_ap_get_led

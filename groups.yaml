@@ -13,6 +13,12 @@ automation_view:
     entities:
       - group.all_automations
 
+lights_view:
+  name: Light
+  view: yes
+  entities:
+    - group.all_lights
+
 scripts_view:
   name: Script
   view: yes
