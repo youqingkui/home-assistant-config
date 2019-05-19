@@ -295,6 +295,12 @@ switch:
 #    host: chuangmi-plug-v1_miio11440510
     token: !secret xiaomi_wifi_socket
 
+  - platform: xiaomi_miio
+    name: 风扇
+    host: 192.168.31.162
+#    host: chuangmi.plug.m3
+    token: !secret wifi_switch_token
+
 stream:
 
 camera:
@@ -417,6 +423,10 @@ homekit:
       - script.restart_frp
       - script.restart_homeassistant
       - sensor.humidity_xiaomi_ap
+    exclude_entities:
+      - binary_sensor.frp_status
+      - binary_sensor.airconditioning
+      - sensor.illumination_7811dcb2a03e
   entity_config:
     script.open_door:
       name: 门

@@ -19,6 +19,12 @@ lights_view:
   entities:
     - group.all_lights
 
+switch_view:
+  name: Switch
+  view: yes
+  entities:
+    - group.all_switches    
+
 scripts_view:
   name: Script
   view: yes
