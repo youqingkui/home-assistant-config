@@ -589,6 +589,61 @@
         message: ""
     - service: script.restart_frp
 
+- id: "85"
+  alias: "风扇电源:开"
+  trigger:
+    - platform: state
+      entity_id: device_tracker.youqingkui_note9
+      from: 'not_home'
+      to: 'home'
+    - platform: state
+      entity_id: device_tracker.youqingkuixr
+      from: 'not_home'
+      to: 'home'
+    - platform: state
+      entity_id: device_tracker.rendandeiphone
+      from: 'not_home'
+      to: 'home'
+    - platform: state
+      entity_id: binary_sensor.door_window_sensor_158d0002025c4b
+      from: 'off'
+      to: 'on'
+  action:
+    - service: switch.turn_on
+      data:
+        entity_id: switch.wificha_zuo
+    - service: notify.h5
+      data:
+        title: "风扇电源"
+        message: "打开"
+
+- id: "61"
+  alias: "风扇电源:离家3分钟关"
+  trigger:
+    platform: time_pattern
+    minutes: '/3'
+    seconds: 00
+  condition:
+    condition: and
+    conditions:
+    - condition: state
+      entity_id: device_tracker.rendandeiphone
+      state: 'not_home'
+    - condition: state
+      entity_id: device_tracker.youqingkui_note9
+      state: 'not_home'
+    - condition: state
+      entity_id: switch.wificha_zuo
+      state: 'on'
+  action:
+    - service: switch.turn_off
+      data:
+        entity_id: switch.wificha_zuo
+    - service: notify.h5
+      data:
+        title: "风扇电源"
+        message: "关闭"
+
 
 
 #- alias: xiaomi_ap_get_led
